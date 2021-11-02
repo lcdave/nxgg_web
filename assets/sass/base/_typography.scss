@@ -1,0 +1,7 @@
+p {
+  &.important {
+    font-size: rem(42);
+    font-weight: $weight-bold;
+    line-height: 1.35;
+  }
+}

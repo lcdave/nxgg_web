@@ -1,0 +1,24 @@
+[
+  {
+    "variation": "default-slice",
+    "name": "Default slice",
+    "slice_type": "intro_text",
+    "items": [],
+    "primary": {
+      "title": [
+        {
+          "type": "heading2",
+          "text": "Cultivate transparent solutions",
+          "spans": []
+        }
+      ],
+      "text": [
+        {
+          "type": "paragraph",
+          "text": "Anim aliquip velit incididunt officia veniam laborum veniam cupidatat. Pariatur laborum veniam sit nisi aliqua non laboris aliquip aute mollit magna non nostrud deserunt officia.",
+          "spans": []
+        }
+      ]
+    }
+  }
+]

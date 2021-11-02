@@ -1,0 +1,39 @@
+.footer {
+  padding: rem(90) 0 !important;
+  text-align: left;
+  background-color: $black !important;
+  color: $white;
+
+  h2 {
+    color: $white;
+    font-size: rem(40);
+    margin-bottom: rem(60) !important;
+  }
+
+  &__contact {
+    font-size: rem(18);
+    margin-bottom: rem(40);
+  }
+
+  &__twitch {
+    img {
+      max-width: rem(40);
+    }
+  }
+
+  &__copyright {
+    a {
+      color: $white;
+      margin-right: rem(20);
+    }
+  }
+
+  &__socialmedia {
+    margin-bottom: rem(80);
+    img {
+      display: inline-block;
+      max-width: rem(30);
+      margin-right: rem(10);
+    }
+  }
+}

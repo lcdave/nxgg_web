@@ -1,0 +1,22 @@
+.teaser {
+  &__image {
+    margin-bottom: rem(15);
+
+    img {
+      border-radius: rem(6);
+    }
+  }
+
+  &__date {
+    color: $green;
+    font-size: rem(18);
+    font-weight: $weight-bold;
+    margin-bottom: rem(15);
+  }
+
+  &__title {
+    h3 {
+      color: $black;
+    }
+  }
+}

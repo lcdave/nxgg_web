@@ -1,0 +1,51 @@
+{
+  "id": "intro",
+  "type": "SharedSlice",
+  "name": "Intro",
+  "description": "Intro",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "Intro",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Description",
+            "placeholder": "A nice description of your product",
+            "allowTargetBlank": true,
+            "single": "paragraph"
+          }
+        },
+        "buttonLink": {
+          "config": {
+            "label": "Button Link",
+            "placeholder": "Link on the button",
+            "select": "web",
+            "allowTargetBlank": false
+          },
+          "type": "Link"
+        },
+        "buttonLabel": {
+          "config": {
+            "label": "Button Label",
+            "placeholder": "Label for the Button"
+          },
+          "type": "Text"
+        }
+      },
+      "items": {}
+    }
+  ]
+}

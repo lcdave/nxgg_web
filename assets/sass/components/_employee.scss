@@ -1,0 +1,13 @@
+.employee {
+  &__image {
+    margin-bottom: rem(15);
+
+    img {
+      border-radius: rem(6);
+    }
+  }
+  &__name {
+    font-size: rem(28);
+    font-weight: $weight-bold;
+  }
+}

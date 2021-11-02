@@ -1,0 +1,23 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+main {
+  text-align: left;
+
+  .button {
+    font-size: rem(20);
+  }
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.content-element {
+  margin-bottom: rem(80);
+}
