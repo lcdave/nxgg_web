@@ -1,0 +1,28 @@
+{
+  "id": "events",
+  "label": "Events",
+  "repeatable": true,
+  "status": true,
+  "json": {
+    "Main": {
+      "uid": {
+        "config": {
+          "label": "uid",
+          "placeholder": ""
+        },
+        "type": "UID"
+      },
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "events": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}

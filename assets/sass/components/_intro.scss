@@ -1,9 +1,8 @@
 .intro {
   position: relative;
-  margin-bottom: rem(80);
 
   &__image {
-    background: url('./assets/theme/intro.jpg');
+    background: url("./assets/theme/intro.jpg");
     position: relative;
     width: 100%;
     display: block;

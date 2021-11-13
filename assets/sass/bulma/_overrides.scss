@@ -3,5 +3,25 @@
 }
 
 .section {
-  padding: 0 !important;
+  &--no-padding {
+    padding: 0 !important;
+  }
+
+  &--black {
+    background-color: $black;
+
+    .teaser__title {
+      h2 {
+        color: $white;
+      }
+    }
+  }
+}
+
+.container {
+  .content-element {
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }

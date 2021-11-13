@@ -19,10 +19,31 @@
           }
         }
       }
+    },
+    "Events": {
+      "default-slice": {
+        "primary": {},
+        "items": {
+          "title": {
+            "config": {
+              "patternType": "HEADING",
+              "blocks": 1
+            }
+          },
+          "text": {
+            "config": {
+              "patternType": "PARAGRAPH",
+              "blocks": 1
+            }
+          }
+        }
+      }
     }
   },
   "_cts": {
     "home": {},
-    "news": {}
+    "news": {},
+    "newslist": {},
+    "events": {}
   }
 }

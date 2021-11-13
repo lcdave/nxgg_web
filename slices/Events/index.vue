@@ -7,31 +7,31 @@
     <div class="columns">
       <div
         :class="columnClass()"
-        v-for="(news, index) in slice.items"
+        v-for="(events, index) in slice.items"
         :key="index"
       >
         <template v-if="limitedItemsCondition(index)">
           <nuxt-link
             :to="{
-              name: 'newsDetail',
+              name: 'eventsDetail',
               params: {
-                title: news.title,
-                imageURL: news.image.url,
-                date: news.date,
-                text: news.text,
+                title: events.title,
+                imageURL: events.image.url,
+                date: events.date,
+                text: events.text,
               },
             }"
           >
             <div class="teaser">
               <div class="teaser__image">
-                <img :src="news.image.url" alt="" />
+                <img :src="events.image.url" alt="" />
               </div>
               <div class="teaser__date">
-                {{ news.date }}
+                {{ events.date }}
               </div>
               <div class="teaser__title">
                 <prismic-rich-text
-                  :field="news.title"
+                  :field="events.title"
                   :htmlSerializer="htmlSerializer"
                 />
               </div>
@@ -45,7 +45,7 @@
 
 <script>
 export default {
-  name: "News",
+  name: "Events",
   props: {
     slice: {
       type: Object,

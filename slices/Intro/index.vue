@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section section--no-padding">
     <div class="intro">
       <div class="intro__image"></div>
       <div class="intro__content">

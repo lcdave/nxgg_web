@@ -1,0 +1,33 @@
+.post {
+  .button {
+    margin-bottom: rem(40);
+  }
+
+  &__title {
+    margin-bottom: rem(40);
+
+    h2 {
+      color: $black;
+      font-size: rem(46);
+    }
+  }
+
+  &__image {
+    margin-bottom: rem(40);
+
+    img {
+      max-width: 75%;
+    }
+  }
+
+  &__date {
+    color: $green;
+    font-size: rem(18);
+    font-weight: $weight-bold;
+    margin-bottom: rem(15);
+  }
+
+  &__text {
+    margin-bottom: rem(40);
+  }
+}
