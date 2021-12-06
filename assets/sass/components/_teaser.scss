@@ -1,4 +1,14 @@
 .teaser {
+  margin-bottom: rem(20);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @include from($tablet) {
+    margin-bottom: 0;
+  }
+
   &__image {
     margin-bottom: rem(15);
 

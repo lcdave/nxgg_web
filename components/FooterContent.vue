@@ -4,7 +4,7 @@
       <h2 class="title size-2">Follow us</h2>
       <div class="footer__contact">
         <div class="columns">
-          <div class="column is-three-quarters">
+          <div class="column is-three-quarters is-half-tablet">
             <div class="contact">
               <h4 class="title is-4">Contact</h4>
               <p>
@@ -40,7 +40,9 @@
       </div>
       <div class="footer__copyright">
         <div class="columns">
-          <div class="column is-three-quarters">© NxGG, 2021</div>
+          <div class="column is-three-quarters is-half-tablet">
+            © NxGG, 2021
+          </div>
           <div class="column">
             <a href="">Policy</a>
             <a href="">Data protection</a>

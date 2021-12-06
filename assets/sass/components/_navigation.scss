@@ -1,11 +1,49 @@
-.navigation {
-  .navbar {
-    .navbar-menu {
-      justify-content: center;
+.mainnav {
+  &__content {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    right: rem(-1000);
+    background: #4a4a4a;
+    z-index: 2;
+    top: 0;
+    transition: right 0.2s ease-in-out;
 
-      .navbar-item {
-        font-size: rem(20);
+    @include from($tablet) {
+      width: 80%;
+    }
+
+    @include from($desktop) {
+      width: 60%;
+    }
+  }
+
+  &__links {
+    margin: rem(80) auto;
+    width: 80%;
+
+    a {
+      font-size: rem(40);
+      color: $white;
+      text-align: center;
+      display: block;
+      margin-bottom: rem(15);
+
+      &:hover {
+        text-decoration: underline;
+        background: transparent;
+        color: $white;
       }
+    }
+  }
+
+  &--active {
+    .mainnav__content {
+      right: 0;
+    }
+
+    .hamburger__item {
+      background: $white;
     }
   }
 }

@@ -1,16 +1,23 @@
 .topbar {
-  margin: rem(15) 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: rem(10) rem(20);
 
-  .columns {
-    align-items: center;
-
-    .column {
-      text-align: center;
-    }
+  @include from($desktop) {
+    margin: rem(15) 0;
+    padding: rem(10) rem(50);
   }
 
   .logo {
-    max-width: rem(200);
-    margin: 0 auto;
+    max-width: rem(150);
+
+    @include from($tablet) {
+      max-width: rem(180);
+    }
+
+    @include from($desktop) {
+      max-width: rem(200);
+    }
   }
 }

@@ -2,6 +2,7 @@
   <div>
     <topbar />
     <Nuxt />
+    <footer-content />
   </div>
 </template>
 
@@ -28,10 +29,12 @@ html {
 
 <script>
 import Topbar from "@/components/Topbar.vue";
+import FooterContent from "@/components/FooterContent.vue";
 
 export default {
   components: {
     Topbar,
+    FooterContent,
   },
   async middleware({ store, $prismic }) {
     await store.dispatch("fetchMenu", $prismic);

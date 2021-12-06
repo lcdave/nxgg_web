@@ -16,7 +16,11 @@
     margin-bottom: rem(40);
 
     img {
-      max-width: 75%;
+      max-width: 100%;
+
+      @include from($tablet) {
+        max-width: 75%;
+      }
     }
   }
 

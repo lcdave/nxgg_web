@@ -22,7 +22,14 @@
     },
     "Events": {
       "default-slice": {
-        "primary": {},
+        "primary": {
+          "title": {
+            "config": {
+              "patternType": "HEADING",
+              "blocks": 1
+            }
+          }
+        },
         "items": {
           "title": {
             "config": {

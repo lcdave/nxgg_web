@@ -45,18 +45,15 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
         </div>
       </div>
     </section>
-    <footer-content />
   </div>
 </template>
 
 <script>
 import SliceZone from "vue-slicezone";
-import FooterContent from "../components/FooterContent.vue";
 
 export default {
   components: {
     SliceZone,
-    FooterContent,
   },
 };
 </script>

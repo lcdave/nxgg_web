@@ -8,7 +8,7 @@
         />
         <div class="columns">
           <div
-            class="column"
+            class="column is-half-tablet is-one-quarter-desktop"
             v-for="(member, index) in slice.items"
             :key="index"
           >

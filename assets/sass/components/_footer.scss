@@ -1,8 +1,12 @@
 .footer {
-  padding: rem(90) 0 !important;
+  padding: rem(50) rem(20);
   text-align: left;
   background-color: $black !important;
   color: $white;
+
+  @include from($desktop) {
+    padding: rem(90) 0 !important;
+  }
 
   h2 {
     color: $white;

@@ -1,8 +1,16 @@
 p {
   &.important {
-    font-size: rem(42);
+    font-size: rem(28);
     font-weight: $weight-bold;
     line-height: 1.35;
+
+    @include from($tablet) {
+      font-size: rem(36);
+    }
+
+    @include from($desktop) {
+      font-size: rem(42);
+    }
   }
 }
 

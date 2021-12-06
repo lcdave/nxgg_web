@@ -1,29 +1,24 @@
 <template>
-  <div class="topbar">
-    <div class="columns">
-      <div class="column">
-        <div class="logo">
-          <img src="../assets/theme/logo.png" alt="NXGG Logo" />
-        </div>
-      </div>
-      <div class="column">
-        <navigation />
-        <a v-if="user" @click="signout">Logout</a>
-      </div>
-      <div class="column">
-        <button class="button is-primary">Jetzt live</button>
-      </div>
+  <div class="topbar" :class="{ 'nav-is-active': isNavActive }">
+    <div class="logo">
+      <img src="../assets/theme/logo.png" alt="NXGG Logo" />
     </div>
+    <div
+      class="hamburger"
+      @click="onBurgerClick()"
+      :class="hamburgerOpen ? 'hamburger--is-open' : ''"
+    >
+      <div class="hamburger__item hamburger__item--first"></div>
+      <div class="hamburger__item hamburger__item--middle"></div>
+      <div class="hamburger__item hamburger__item--last"></div>
+    </div>
+    <navigation :isActive="isNavActive" />
+    <div class="overlay" :class="{ 'overlay--active': isNavActive }"></div>
   </div>
 </template>
 
-<style lang="scss" src="../assets/sass/components/_topbar.scss"></style>
-
 <script>
 import Navigation from "./Navigation.vue";
-
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
 
 export default {
   name: "Topbar",
@@ -32,31 +27,23 @@ export default {
   },
   data() {
     return {
-      user: "",
+      hamburgerOpen: false,
+      isNavActive: false,
     };
   },
-  mounted() {
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
-      if (user) {
-        this.user = user;
-      } else {
-        this.user = null;
-      }
-    });
-  },
   methods: {
-    signout() {
-      firebase
-        .auth()
-        .signOut()
-        .then((result) => {
-          console.log(result);
-          this.user = "";
-          this.$router.push("/");
-        });
+    onBurgerClick() {
+      this.hamburgerOpen = !this.hamburgerOpen;
+      this.isNavActive = !this.isNavActive;
+
+      if (this.isNavActive) {
+        document.documentElement.style.overflow = "hidden";
+      } else {
+        document.documentElement.style.overflow = "auto";
+      }
     },
   },
 };
 </script>
-<style lang="scss" scoped></style>
+
+<style lang="scss" src="../assets/sass/components/_topbar.scss"></style>

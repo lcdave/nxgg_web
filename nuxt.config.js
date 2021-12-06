@@ -42,8 +42,9 @@ export default {
 
   styleResources: {
     scss: [
-      "./assets/sass/base/_variables.scss",
       "./assets/sass/tools/_functions.scss",
+      "./assets/sass/base/_variables.scss",
+      "./assets/sass/tools/_mixins.scss",
     ],
   },
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
