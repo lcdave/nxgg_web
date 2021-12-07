@@ -45,12 +45,39 @@
           }
         }
       }
+    },
+    "Tourneys": {
+      "default-slice": {
+        "primary": {
+          "title": {
+            "config": {
+              "patternType": "HEADING",
+              "blocks": 1
+            }
+          }
+        },
+        "items": {
+          "title": {
+            "config": {
+              "patternType": "HEADING",
+              "blocks": 1
+            }
+          },
+          "text": {
+            "config": {
+              "patternType": "PARAGRAPH",
+              "blocks": 1
+            }
+          }
+        }
+      }
     }
   },
   "_cts": {
     "home": {},
     "news": {},
     "newslist": {},
-    "events": {}
+    "events": {},
+    "tourneys": {}
   }
 }

@@ -45,6 +45,26 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
         </div>
       </div>
     </section>
+    <section class="section">
+      <div class="container">
+        <slice-zone
+          type="tourneys"
+          queryType="single"
+          :sliceProps="{ col: 6, limitedItems: true }"
+        />
+        <div class="columns is-centered">
+          <div class="column has-text-centered is-2">
+            <nuxt-link
+              :to="{
+                name: 'tourneysList',
+              }"
+            >
+              <button class="button is-primary">Alle Turniere</button>
+            </nuxt-link>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
