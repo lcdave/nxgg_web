@@ -18,20 +18,21 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "tourney Form",
+  name: "tourneyForm",
+  data() {
+    return {
+      enc: this.encode({
+        "form-name": "tourney-registration",
+        ...this.form,
+      }),
+    };
+  },
   methods: {
     handleSubmit() {
       const axiosConfig = {
         header: { "Content-Type": "application/x-www-form-urlencoded" },
       };
-      axios.post(
-        "/",
-        this.encode({
-          "form-name": "tourney-registration",
-          ...this.form,
-        }),
-        axiosConfig
-      );
+      this.$axios.$post("/", this.enc, axiosConfig);
     },
   },
   data() {

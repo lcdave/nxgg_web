@@ -69,6 +69,7 @@ export default {
     ],
     ["nuxt-sm"],
     ["nuxt-buefy", { css: false }],
+    ["@nuxtjs/axios"],
   ],
   generate: {
     fallback: true,
