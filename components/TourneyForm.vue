@@ -4,19 +4,12 @@
     method="post"
     data-netlify="true"
     data-netlify-honeypot="bot-field"
+    @submit.prevent="handleSubmit"
   >
     <input type="hidden" name="form-name" value="tourney-registration" />
-    <label v-for="(panelist, index) in panelists" :key="index">
-      <input
-        type="radio"
-        name="panelist"
-        :value="panelist"
-        @input="(ev) => updatePanelist"
-        :checked="panelist === currentPanelist"
-      />
-      <span>{{ panelist }}</span>
+    <label for="teamname">
+      <input type="text" name="teamname" />
     </label>
-    ...
     <button>Submit</button>
   </form>
 </template>
@@ -27,15 +20,22 @@ import Vue from "vue";
 export default Vue.extend({
   name: "tourney Form",
   methods: {
-    updatePanelist(ev) {
-      this.currentPanelist = ev.target.value;
+    handleSubmit() {
+      const axiosConfig = {
+        header: { "Content-Type": "application/x-www-form-urlencoded" },
+      };
+      axios.post(
+        "/",
+        this.encode({
+          "form-name": "tourney-registration",
+          ...this.form,
+        }),
+        axiosConfig
+      );
     },
   },
   data() {
-    return {
-      panelists: ["Evan You", "Chris Fritz"],
-      currentPanelist: "Evan You",
-    };
+    return {};
   },
 });
 </script>
