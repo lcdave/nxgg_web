@@ -5,6 +5,14 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
 <template>
   <div class="home">
     <slice-zone type="home" queryType="single" />
+    <section
+      v-for="tourney in tourneys"
+      :key="tourney.id"
+      v-bind:tourney="tourney"
+    >
+      <!-- Here :post="post" passes the data to the component -->
+      <tourney v-if="tourney" :tourney="tourney" />
+    </section>
     <section class="section section--black">
       <div class="container">
         <slice-zone
@@ -74,6 +82,20 @@ import SliceZone from "vue-slicezone";
 export default {
   components: {
     SliceZone,
+  },
+  async asyncData({ $prismic, error }) {
+    try {
+      const response = await $prismic.api.query(
+        $prismic.predicates.at("document.type", "tourney")
+      );
+      // Returns data to be used in template
+      return {
+        tourneys: response.results,
+      };
+    } catch (e) {
+      // Returns error page
+      error({ statusCode: 404, message: "Page not found" });
+    }
   },
 };
 </script>

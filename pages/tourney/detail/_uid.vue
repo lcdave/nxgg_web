@@ -17,18 +17,7 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
                 :htmlSerializer="htmlSerializer"
               />
             </div>
-            <div class="post__image">
-              <img :src="imageURL" alt="" />
-            </div>
-            <div class="post__date">
-              {{ date }}
-            </div>
-            <div class="post__text">
-              <prismic-rich-text
-                :field="text"
-                :htmlSerializer="htmlSerializer"
-              />
-            </div>
+            <h1>{{ $prismic.asText(tourney.title) }}</h1>
             <tourney-form />
             <NuxtLink to="/"><button class="button">Zurück</button></NuxtLink>
           </div>
@@ -39,18 +28,23 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
 </template>
 
 <script>
-import TourneyForm from "../components/TourneyForm.vue";
+import TourneyForm from "@/components/TourneyForm.vue";
 export default {
   components: {
     TourneyForm,
   },
-  data() {
-    return {
-      title: this.$route.params.title,
-      imageURL: this.$route.params.imageURL,
-      date: this.$route.params.date,
-      text: this.$route.params.text,
-    };
+  async asyncData({ $prismic, params, error }) {
+    try {
+      // Query to get post content
+      const tourney = (await $prismic.api.getByUID("tourney", params.uid)).data;
+      // Returns data to be used in template
+      return {
+        tourney: tourney,
+      };
+    } catch (e) {
+      // Returns error page
+      error({ statusCode: 404, message: "Page not found" });
+    }
   },
   methods: {
     htmlSerializer(type, element, content, children) {

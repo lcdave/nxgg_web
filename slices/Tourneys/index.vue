@@ -7,36 +7,11 @@
     <div class="columns">
       <div
         :class="columnClass()"
-        v-for="(tourneys, index) in slice.items"
+        v-for="(tourney, index) in slice.items"
         :key="index"
       >
         <template v-if="limitedItemsCondition(index)">
-          <nuxt-link
-            :to="{
-              name: 'tourneysDetail',
-              params: {
-                title: tourneys.title,
-                imageURL: tourneys.image.url,
-                date: tourneys.date,
-                text: tourneys.text,
-              },
-            }"
-          >
-            <div class="teaser">
-              <div class="teaser__image">
-                <img :src="tourneys.image.url" alt="" />
-              </div>
-              <div class="teaser__date">
-                {{ tourneys.date }}
-              </div>
-              <div class="teaser__title">
-                <prismic-rich-text
-                  :field="tourneys.title"
-                  :htmlSerializer="htmlSerializer"
-                />
-              </div>
-            </div>
-          </nuxt-link>
+          <tourney :tourney="tourney" />
         </template>
       </div>
     </div>
@@ -44,8 +19,12 @@
 </template>
 
 <script>
+import Tourney from "../../components/Tourney.vue";
 export default {
   name: "Tourneys",
+  components: {
+    Tourney,
+  },
   props: {
     slice: {
       type: Object,

@@ -1,0 +1,26 @@
+{
+  "id": "tourney_list",
+  "type": "SharedSlice",
+  "name": "TourneyList",
+  "description": "TourneyList",
+  "variations": [
+    {
+      "id": "default-slice",
+      "name": "Default slice",
+      "docURL": "...",
+      "version": "sktwi1xtmkfgx8626",
+      "description": "TourneyList",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading1",
+            "label": "Title",
+            "placeholder": "This is where it all begins..."
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

@@ -1,25 +1,5 @@
 {
   "slices": {
-    "Member": {
-      "default-slice": {
-        "primary": {
-          "title": {
-            "config": {
-              "patternType": "HEADING",
-              "blocks": 1
-            }
-          }
-        },
-        "items": {
-          "name": {
-            "config": {
-              "patternType": "PARAGRAPH",
-              "blocks": 1
-            }
-          }
-        }
-      }
-    },
     "Events": {
       "default-slice": {
         "primary": {
@@ -71,13 +51,15 @@
           }
         }
       }
-    }
+    },
+    "Tourney": {}
   },
   "_cts": {
     "home": {},
     "news": {},
     "newslist": {},
     "events": {},
-    "tourneys": {}
+    "tourneys": {},
+    "tourney": {}
   }
 }

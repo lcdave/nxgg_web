@@ -25,6 +25,9 @@
             },
             "member": {
               "type": "SharedSlice"
+            },
+            "tourney_list": {
+              "type": "SharedSlice"
             }
           }
         }
