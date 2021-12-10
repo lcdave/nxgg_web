@@ -5,92 +5,65 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
 <template>
   <div class="home">
     <slice-zone type="home" queryType="single" />
-    <section
-      v-for="tourney in tourneys"
-      :key="tourney.id"
-      v-bind:tourney="tourney"
-    >
-      <!-- Here :post="post" passes the data to the component -->
-      <tourney v-if="tourney" :tourney="tourney" />
+    <section class="section section--black">
+      <post-preview
+        :items="news"
+        :limit="2"
+        title="News"
+        buttonLabel="Alle News"
+        buttonLink="/news/list"
+      />
+    </section>
+    <section class="section">
+      <post-preview
+        :items="events"
+        :limit="4"
+        title="Events"
+        buttonLabel="Alle Events"
+        buttonLink="/events/list"
+      />
     </section>
     <section class="section section--black">
-      <div class="container">
-        <slice-zone
-          type="news"
-          queryType="single"
-          :sliceProps="{ col: 6, limitedItems: true }"
-        />
-        <div class="columns is-centered">
-          <div class="column has-text-centered is-2">
-            <nuxt-link
-              :to="{
-                name: 'newsList',
-              }"
-            >
-              <button class="button is-primary">Alle News</button>
-            </nuxt-link>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="container">
-        <slice-zone
-          type="events"
-          queryType="single"
-          :sliceProps="{ col: 6, limitedItems: true }"
-        />
-        <div class="columns is-centered">
-          <div class="column has-text-centered is-2">
-            <nuxt-link
-              :to="{
-                name: 'eventsList',
-              }"
-            >
-              <button class="button is-primary">Alle Events</button>
-            </nuxt-link>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="container">
-        <slice-zone
-          type="tourneys"
-          queryType="single"
-          :sliceProps="{ col: 6, limitedItems: true }"
-        />
-        <div class="columns is-centered">
-          <div class="column has-text-centered is-2">
-            <nuxt-link
-              :to="{
-                name: 'tourneysList',
-              }"
-            >
-              <button class="button is-primary">Alle Turniere</button>
-            </nuxt-link>
-          </div>
-        </div>
-      </div>
+      <post-preview
+        :items="tourneys"
+        :limit="2"
+        title="Turniere"
+        buttonLabel="Alle Turniere"
+        buttonLink="/tourneys/list"
+      />
     </section>
   </div>
 </template>
 
 <script>
 import SliceZone from "vue-slicezone";
+import Teaser from "@/components/Teaser.vue";
+import PostPreview from "@/components/generic/postPreview.vue";
 
 export default {
   components: {
     SliceZone,
+    Teaser,
+    PostPreview,
   },
   async asyncData({ $prismic, error }) {
     try {
-      const response = await $prismic.api.query(
+      const news = await $prismic.api.query(
+        $prismic.predicates.at("document.type", "news")
+      );
+
+      const events = await $prismic.api.query(
+        $prismic.predicates.at("document.type", "event")
+      );
+
+      const tourneys = await $prismic.api.query(
         $prismic.predicates.at("document.type", "tourney")
       );
       // Returns data to be used in template
       return {
-        tourneys: response.results,
+        news: news.results,
+        events: events.results,
+        tourneys: tourneys.results,
       };
     } catch (e) {
       // Returns error page

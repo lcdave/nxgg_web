@@ -56,10 +56,29 @@
   },
   "_cts": {
     "home": {},
-    "news": {},
-    "newslist": {},
     "events": {},
-    "tourneys": {},
-    "tourney": {}
+    "news": {
+      "title": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 1
+        }
+      },
+      "text": {
+        "config": {
+          "patternType": "PARAGRAPH",
+          "blocks": 1
+        }
+      }
+    },
+    "tourney": {
+      "text": {
+        "config": {
+          "patternType": "PARAGRAPH",
+          "blocks": 1
+        }
+      }
+    },
+    "event": {}
   }
 }

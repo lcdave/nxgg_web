@@ -1,6 +1,31 @@
 {
-  "id": "08d493d2-eef0-4e50-b785-28154c565e8d",
-  "uid": "temporibus-esse-corrupti",
+  "id": "79e182e0-5065-40af-aa7b-55f93e2ff6e9",
+  "uid": "necessitatibus-eum-aspernatur",
   "type": "news",
-  "data": {}
+  "data": {
+    "image": {
+      "dimensions": {
+        "width": 900,
+        "height": 500
+      },
+      "alt": "Placeholder image",
+      "copyright": null,
+      "url": "https://images.unsplash.com/photo-1596195689404-24d8a8d1c6ea?w=900&h=500&fit=crop"
+    },
+    "title": [
+      {
+        "type": "heading2",
+        "text": "Facilitate seamless mindshare",
+        "spans": []
+      }
+    ],
+    "date": "2020-10-27",
+    "text": [
+      {
+        "type": "paragraph",
+        "text": "Ea voluptate eiusmod esse eu irure ut dolore mollit sunt cupidatat reprehenderit adipisicing consectetur. Ea aliqua mollit reprehenderit dolore elit exercitation et reprehenderit sunt do nostrud ea.",
+        "spans": []
+      }
+    ]
+  }
 }

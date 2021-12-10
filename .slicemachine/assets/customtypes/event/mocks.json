@@ -1,0 +1,31 @@
+{
+  "id": "181b8a82-b1d8-4825-940d-33f4f4f1d63a",
+  "uid": "aut-quas-quis",
+  "type": "event",
+  "data": {
+    "image": {
+      "dimensions": {
+        "width": 900,
+        "height": 500
+      },
+      "alt": "Placeholder image",
+      "copyright": null,
+      "url": "https://images.unsplash.com/photo-1587905069134-008460d7a636?w=900&h=500&fit=crop"
+    },
+    "title": [
+      {
+        "type": "heading2",
+        "text": "Exploit distributed markets",
+        "spans": []
+      }
+    ],
+    "date": "2019-08-28",
+    "text": [
+      {
+        "type": "paragraph",
+        "text": "Aute eiusmod deserunt reprehenderit consectetur irure occaecat in fugiat aliqua Lorem reprehenderit.",
+        "spans": []
+      }
+    ]
+  }
+}

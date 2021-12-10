@@ -1,7 +1,14 @@
 export default function (doc) {
-  console.warn(JSON.stringify(doc));
   if (doc.type === "tourney") {
-    return "/tourney/detail/" + doc.uid;
+    return "/tourneys/detail/" + doc.uid;
+  }
+
+  if (doc.type === "news") {
+    return "/news/detail/" + doc.uid;
+  }
+
+  if (doc.type === "event") {
+    return "/events/detail/" + doc.uid;
   }
 
   return "/not-found";
