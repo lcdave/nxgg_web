@@ -84,4 +84,7 @@ export default {
   },
   // This is a bug with `getStoriesPaths` and Nuxt that is awaiting to be fixed
   ignore: [...getStoriesPaths().map((path) => path.replace("../", "~/"))],
+  prismic: {
+    linkResolver: "~/plugins/link-resolver.js",
+  },
 };

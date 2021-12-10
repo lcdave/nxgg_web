@@ -1,0 +1,11 @@
+.form {
+  .field {
+    &.is-grouped {
+      width: 50%;
+
+      .control {
+        flex-grow: 1;
+      }
+    }
+  }
+}
