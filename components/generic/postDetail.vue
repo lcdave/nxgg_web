@@ -18,7 +18,7 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
               <img :src="post.image.url" alt="" />
             </div>
             <div class="post__date">
-              {{ post.date }}
+              {{ formatDate(post.date) }}
             </div>
             <div class="post__text">
               <prismic-rich-text :field="post.text" />
@@ -38,6 +38,12 @@ export default {
     post: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    formatDate(date) {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(date).toLocaleDateString("de-DE", options);
     },
   },
 };

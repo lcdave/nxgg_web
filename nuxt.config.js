@@ -36,7 +36,11 @@ export default {
     ],
   },
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ["./assets/sass/app.scss", "./assets/sass/bulma/_variables.scss"],
+  css: [
+    "./assets/sass/app.scss",
+    "./assets/sass/bulma/_variables.scss",
+    "./assets/sass/base/_fonts.scss",
+  ],
 
   buildModules: ["@nuxtjs/style-resources"],
 
@@ -45,6 +49,7 @@ export default {
       "./assets/sass/tools/_functions.scss",
       "./assets/sass/base/_variables.scss",
       "./assets/sass/tools/_mixins.scss",
+      "./assets/sass/base/_fonts.scss",
     ],
   },
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)

@@ -10,17 +10,17 @@
     <div class="field is-grouped">
       <div class="control">
         <label class="label">Full name</label>
-        <input class="input" type="text" name="name" />
+        <input class="input" type="text" name="name" required />
       </div>
       <div class="control">
         <label class="label">E-Mail</label>
-        <input class="input" type="text" name="email" />
+        <input class="input" type="text" name="email" required />
       </div>
     </div>
     <div class="field is-grouped">
       <div class="control">
         <label class="label">Team Name</label>
-        <input class="input" type="text" name="teamname" />
+        <input class="input" type="text" name="teamname" required />
       </div>
       <div class="control">
         <label class="label">Team captains discord</label>
@@ -74,7 +74,7 @@
     </div>
     <div class="field is-grouped">
       <div class="control">
-        <button type="submit" class="button is-link">Submit</button>
+        <button type="submit" class="button is-primary">Submit</button>
       </div>
     </div>
   </form>

@@ -1,7 +1,13 @@
 <template>
   <div class="topbar" :class="{ 'nav-is-active': isNavActive }">
     <div class="logo">
-      <img src="../assets/theme/logo.png" alt="NXGG Logo" />
+      <nuxt-link
+        :to="{
+          name: 'index',
+        }"
+      >
+        <img src="../assets/theme/logo.svg" alt="NXGG Logo" />
+      </nuxt-link>
     </div>
     <div
       class="hamburger"

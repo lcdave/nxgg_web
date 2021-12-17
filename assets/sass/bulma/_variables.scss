@@ -3,6 +3,7 @@ $primary: $green !default;
 $title-color: $green !default;
 $size-2: 32px !default;
 $size-3: 28px !default;
+$family-primary: "HKGroteskWide", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 @import "~bulma/bulma";
 @import "~buefy/src/scss/buefy";

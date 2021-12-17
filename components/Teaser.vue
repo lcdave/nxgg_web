@@ -5,7 +5,7 @@
         <img :src="teaser.data.image.url" alt="" />
       </div>
       <div class="teaser__date">
-        {{ teaser.data.date }}
+        {{ formatDate(teaser.data.date) }}
       </div>
       <div class="teaser__title">
         <h2>{{ $prismic.asText(teaser.data.title) }}</h2>
@@ -43,6 +43,10 @@ export default {
         default:
           return null;
       }
+    },
+    formatDate(date) {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(date).toLocaleDateString("de-DE", options);
     },
   },
 };

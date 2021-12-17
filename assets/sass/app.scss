@@ -1,4 +1,5 @@
 @import "base/typography";
+@import "base/fonts";
 @import "base/global";
 
 @import "bulma/_overrides";
@@ -9,3 +10,4 @@
 
 @import "components/hamburger";
 @import "components/overlay";
+@import "components/button";

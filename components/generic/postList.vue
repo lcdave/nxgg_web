@@ -7,7 +7,7 @@
             name: 'index',
           }"
         >
-          <button class="button">Zurück</button>
+          <button class="button button--back">Zurück</button>
         </nuxt-link>
         <nuxt-link :to="link">
           <div class="content-element" v-if="items">
@@ -22,6 +22,13 @@
               </div>
             </div>
           </div>
+        </nuxt-link>
+        <nuxt-link
+          :to="{
+            name: 'index',
+          }"
+        >
+          <button class="button button--back">Zurück</button>
         </nuxt-link>
       </div>
     </section>
