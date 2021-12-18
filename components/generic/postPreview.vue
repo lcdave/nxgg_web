@@ -46,5 +46,13 @@ export default Vue.extend({
       required: true,
     },
   },
+  computed: {
+    sortedItems: function () {
+      this.items.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date);
+      });
+      return this.items;
+    },
+  },
 });
 </script>

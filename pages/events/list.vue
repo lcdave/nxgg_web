@@ -12,7 +12,8 @@ export default Vue.extend({
   async asyncData({ $prismic, error }) {
     try {
       const events = await $prismic.api.query(
-        $prismic.predicates.at("document.type", "event")
+        $prismic.predicates.at("document.type", "event"),
+        { orderings: "[my.event.date desc]" }
       );
       // Returns data to be used in template
       return {

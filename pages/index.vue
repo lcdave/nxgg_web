@@ -53,15 +53,18 @@ export default {
   async asyncData({ $prismic, error }) {
     try {
       const news = await $prismic.api.query(
-        $prismic.predicates.at("document.type", "news")
+        $prismic.predicates.at("document.type", "news"),
+        { orderings: "[my.news.date desc]" }
       );
 
       const events = await $prismic.api.query(
-        $prismic.predicates.at("document.type", "event")
+        $prismic.predicates.at("document.type", "event"),
+        { orderings: "[my.event.date desc]" }
       );
 
       const tourneys = await $prismic.api.query(
-        $prismic.predicates.at("document.type", "tourney")
+        $prismic.predicates.at("document.type", "tourney"),
+        { orderings: "[my.tourney.date desc]" }
       );
       return {
         news: news.results,

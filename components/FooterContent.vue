@@ -30,10 +30,10 @@
         <div class="columns">
           <div class="column">
             <a href=""
-              ><img src="../assets/theme/facebook.png" alt="Twitch"
+              ><img src="../assets/theme/facebook.svg" alt="Twitch"
             /></a>
             <a href=""
-              ><img src="../assets/theme/instagram.png" alt="Twitch"
+              ><img src="../assets/theme/instagram.svg" alt="Twitch"
             /></a>
           </div>
         </div>
