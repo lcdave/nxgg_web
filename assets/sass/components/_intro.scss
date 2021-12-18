@@ -13,7 +13,7 @@
 
   &__content {
     position: absolute;
-    width: 55%;
+    width: 100%;
     top: 50%;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
@@ -22,11 +22,19 @@
     margin: 0 auto;
     text-align: center;
 
+    @include from($desktop) {
+      width: 55%;
+    }
+
     h1 {
-      font-size: rem(70);
+      font-size: rem(50);
       color: $white;
       text-shadow: 2px 2px 15px #26272a;
       margin-bottom: rem(20);
+
+      @include from($desktop) {
+        font-size: rem(70);
+      }
     }
 
     p {
@@ -37,7 +45,7 @@
     }
 
     .button {
-      font-size: rem(20);
+      font-size: rem(16);
     }
   }
 }
