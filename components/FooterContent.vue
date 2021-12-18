@@ -19,7 +19,7 @@
           <div class="column">
             <h4 class="title is-4">Livestream every sunday</h4>
             <div class="footer__twitch">
-              <a href="twitch.com">
+              <a href="https://www.twitch.tv/nxgg_tv" target="_blank">
                 <img src="../assets/theme/twitch.png" alt="Twitch" />
               </a>
             </div>
@@ -29,10 +29,12 @@
       <div class="footer__socialmedia">
         <div class="columns">
           <div class="column">
-            <a href=""
-              ><img src="../assets/theme/facebook.svg" alt="Twitch"
+            <a href="https://www.facebook.com/nxggesports/" target="_blank">
+              <img src="../assets/theme/facebook.svg" alt="Twitch"
             /></a>
-            <a href=""
+            <a
+              href="https://www.instagram.com/next_gaming_generation/?hl=de"
+              target="_blank"
               ><img src="../assets/theme/instagram.svg" alt="Twitch"
             /></a>
           </div>
@@ -42,10 +44,6 @@
         <div class="columns">
           <div class="column is-three-quarters is-half-tablet">
             © NxGG, 2021
-          </div>
-          <div class="column">
-            <a href="">Policy</a>
-            <a href="">Data protection</a>
           </div>
         </div>
       </div>

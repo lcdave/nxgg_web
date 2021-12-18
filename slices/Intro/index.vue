@@ -5,7 +5,9 @@
       <div class="intro__content">
         <prismic-rich-text :field="slice.primary.title" />
         <prismic-rich-text :field="slice.primary.description" />
-        <button class="button is-primary">Zum Livestream</button>
+        <a href="https://www.twitch.tv/nxgg_tv" target="_blank">
+          <button class="button is-primary">Zum Livestream</button>
+        </a>
       </div>
     </div>
   </section>
