@@ -7,13 +7,7 @@
           <div class="column is-three-quarters is-half-tablet">
             <div class="contact">
               <h4 class="title is-4">Contact</h4>
-              <p>
-                Verein NxGG <br />
-                Warzone 1 <br />
-                4106 Therwil <br />
-                <br />
-                info@nxgg.org<br />
-              </p>
+              <p>info@nxgg.org</p>
             </div>
           </div>
           <div class="column">
