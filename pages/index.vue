@@ -5,7 +5,7 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
 <template>
   <div class="home">
     <slice-zone type="home" queryType="single" />
-    <section class="section section--black">
+    <section class="section section--black" id="news">
       <div class="container">
         <post-preview
           :items="news"
@@ -16,7 +16,7 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
         />
       </div>
     </section>
-    <section class="section">
+    <section class="section" id="events">
       <div class="container">
         <post-preview
           :items="events"
@@ -27,7 +27,7 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
         />
       </div>
     </section>
-    <section class="section section--black">
+    <section class="section section--black" id="tourneys">
       <div class="container">
         <post-preview
           :items="tourneys"
