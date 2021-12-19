@@ -51,22 +51,6 @@
       <div class="control">
         <label class="checkbox">
           <input type="checkbox" />
-          I understand and agree to collateral gaming's custom rules above
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="checkbox">
-          <input type="checkbox" />
-          I have joined collateral Discord and have read the how-to-play channel
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="checkbox">
-          <input type="checkbox" />
           I understand I still have to pay and payments need to be made 30
           minutes before tournament start time
         </label>
