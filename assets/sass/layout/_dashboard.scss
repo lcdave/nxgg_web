@@ -1,0 +1,10 @@
+.dashboard {
+  background-color: $codgray-light;
+  min-height: 100vh;
+  color: $white;
+
+  main {
+    margin-left: rem($sidenavigation-width);
+    padding: rem(16) rem(56);
+  }
+}

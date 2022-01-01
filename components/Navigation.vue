@@ -38,7 +38,6 @@ export default Vue.extend({
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
       if (user) {
         this.user = user;
       } else {

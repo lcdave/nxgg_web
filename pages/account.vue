@@ -19,8 +19,11 @@ export default Vue.extend({
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
+      store.dispatch("fetchUser", user);
+      console.log("observer user state:", this.user);
       if (!this.user) {
-        this.$router.push("/");
+        console.log("no user");
+        //this.$router.push("/");
       } else {
         this.user = user;
       }

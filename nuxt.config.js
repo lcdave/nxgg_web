@@ -53,7 +53,7 @@ export default {
     ],
   },
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ["./plugins/firebase.js"],
+  plugins: [{ src: "./plugins/firebase.js" }, { src: "./plugins/supabase.js" }],
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -73,7 +73,15 @@ export default {
       },
     ],
     ["nuxt-sm"],
-    ["nuxt-buefy", { css: false }],
+    [
+      "nuxt-buefy",
+      {
+        css: false,
+        defaultIconPack: "fas",
+        materialDesignIconsHRef:
+          "https://use.fontawesome.com/releases/v5.4.1/css/all.css",
+      },
+    ],
     ["@nuxtjs/axios"],
   ],
   generate: {

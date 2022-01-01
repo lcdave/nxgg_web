@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form @submit.prevent="pressed">
+    <form @submit.prevent="signUp">
       <input type="text" placeholder="Email" v-model="email" />
       <input type="text" placeholder="Password" v-model="password" />
       <button type="submit">Submit</button>
@@ -10,6 +10,7 @@
 
 <script>
 import Vue from "vue";
+import { mapActions } from "vuex";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -24,6 +25,7 @@ export default Vue.extend({
     };
   },
   methods: {
+    ...mapActions(["signUpAction"]),
     pressed() {
       firebase
         .auth()
@@ -36,6 +38,9 @@ export default Vue.extend({
           this.error = error;
           console.log(error);
         });
+    },
+    signUp() {
+      this.signUpAction({ email: this.email, password: this.password });
     },
   },
 });
