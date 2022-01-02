@@ -27,6 +27,7 @@ import * as TourneyService from "@/services/tourneys/tourneys";
 
 export default Vue.extend({
   name: "",
+  middleware: ["auth"],
   layout: "dashboard",
   data() {
     return {
