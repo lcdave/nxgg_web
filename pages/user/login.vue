@@ -68,13 +68,13 @@ export default {
   }),
   created() {
     this.profile = this.$supabase.auth.user();
+
+    //TODO: Use middleware to make this redirect (avoids redirect delay)
+    if (this.profile) {
+      this.$router.push("/user/dashboard/overview");
+    }
   },
   methods: {
-    async signOut() {
-      /* signOut deletes the user's session */
-      await this.$supabase.auth.signOut();
-      this.profile = null;
-    },
     async signIn() {
       const { user, error } = await this.$supabase.auth.signIn({
         email: this.email,
@@ -84,6 +84,7 @@ export default {
       if (!error) {
         this.profile = user;
         this.$store.commit("auth/setUser", user);
+        this.$router.push("/user/dashboard/overview");
       } else {
         console.log(error);
       }

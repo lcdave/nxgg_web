@@ -3,6 +3,7 @@
     <side-navigation />
     <main>
       <Nuxt />
+      <button @click="logout()">Logout</button>
     </main>
   </div>
 </template>
@@ -17,7 +18,13 @@ export default Vue.extend({
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    logout() {
+      this.$supabase.auth.signOut();
+      this.$store.commit("auth/setUser", null);
+      this.$router.push("/auth");
+    },
+  },
 });
 </script>
 
