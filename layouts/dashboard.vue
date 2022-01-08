@@ -2,8 +2,8 @@
   <div class="dashboard">
     <side-navigation />
     <main>
+      <userbar :user="user" />
       <Nuxt />
-      <button @click="logout()">Logout</button>
     </main>
   </div>
 </template>
@@ -16,14 +16,12 @@ export default Vue.extend({
   components: { SideNavigation },
   name: "",
   data() {
-    return {};
+    return {
+      user: "",
+    };
   },
-  methods: {
-    logout() {
-      this.$supabase.auth.signOut();
-      this.$store.commit("auth/setUser", null);
-      this.$router.push("/auth");
-    },
+  async created() {
+    this.user = this.$supabase.auth.user();
   },
 });
 </script>

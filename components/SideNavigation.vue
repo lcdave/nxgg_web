@@ -16,6 +16,11 @@
           </router-link>
         </li>
         <li @click="onLinkClick">
+          <router-link to="/user/dashboard/tourney/admin">
+            <font-awesome-icon :icon="['fas', 'user-shield']" />
+          </router-link>
+        </li>
+        <li @click="onLinkClick">
           <router-link to="/user/dashboard/overview">
             <font-awesome-icon :icon="['fas', 'cog']" />
           </router-link>
@@ -23,7 +28,7 @@
       </ul>
     </div>
     <div class="side-navigation__footer">
-      <font-awesome-icon :icon="['fas', 'power-off']" />
+      <font-awesome-icon :icon="['fas', 'power-off']" @click="logout()" />
     </div>
   </div>
 </template>
@@ -41,6 +46,11 @@ export default {
         navItems[i].classList.remove("active");
       }
       e.currentTarget.classList.toggle("active");
+    },
+    logout() {
+      this.$supabase.auth.signOut();
+      this.$store.commit("auth/setUser", null);
+      this.$router.push("/auth");
     },
   },
 };
