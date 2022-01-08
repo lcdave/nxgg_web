@@ -18,8 +18,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
 
 export default Vue.extend({
   name: "",
@@ -36,27 +34,8 @@ export default Vue.extend({
       name: "Michel",
     };
   },
-  mounted() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.user = user;
-      } else {
-        this.user = null;
-      }
-    });
-  },
-  methods: {
-    signout() {
-      firebase
-        .auth()
-        .signOut()
-        .then((result) => {
-          console.log(result);
-          this.user = "";
-          this.$router.push("/");
-        });
-    },
-  },
+  mounted() {},
+  methods: {},
 });
 </script>
 

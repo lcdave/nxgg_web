@@ -5,7 +5,7 @@
   padding-top: rem(23);
   height: 100%;
   width: rem($sidenavigation-width);
-  background: $white;
+  background: $outer-space;
 
   &__logo {
     width: rem(74);
@@ -18,11 +18,15 @@
     justify-content: center;
     align-items: center;
     height: calc(
-      100% - (#{$sidenavigation-logo-width}px - #{$sidenavigation-top-offset}px)
+      100% -
+        (
+          #{$sidenavigation-logo-width}px - #{$sidenavigation-top-offset}px + #{$sidenavigation-bottom-offset}px
+        )
     );
 
     a {
       text-decoration: none;
+      color: $green;
     }
 
     ul {
@@ -32,8 +36,33 @@
       padding: 0;
 
       li {
+        position: relative;
         margin-bottom: rem(40);
+
+        &.active {
+          &:before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: -98px;
+            width: 58px;
+            height: 46px;
+            background: #00ff00;
+            border-radius: 11px;
+          }
+        }
       }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      text-decoration: none;
+      color: $green;
     }
   }
 }

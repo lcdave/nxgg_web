@@ -1,0 +1,9 @@
+.tourneylist {
+  &__row {
+    display: flex;
+  }
+
+  &__col {
+    flex: 1;
+  }
+}

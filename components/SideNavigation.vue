@@ -1,40 +1,46 @@
 <template>
   <div class="side-navigation">
-    <div class="side-navigation__logo"></div>
+    <div class="side-navigation__logo">
+      <img src="../assets/theme/logo.svg" alt="NXGG Logo" />
+    </div>
     <div class="side-navigation__cta">
       <ul>
-        <li>
-          <router-link to="/" @click="onLinkClick">
-            <span class="icon-home var_grey is-active" />
+        <li class="active" @click="onLinkClick">
+          <router-link to="/user/dashboard/overview">
+            <HomeIcon size="1.5x" />
           </router-link>
         </li>
-        <li>
-          <router-link to="/service/all/" @click="onLinkClick">
-            <span class="icon-bar-chart var_grey"
-          /></router-link>
+        <li @click="onLinkClick">
+          <router-link to="/user/dashboard/overview">
+            <font-awesome-icon :icon="['fas', 'gamepad']" />
+          </router-link>
         </li>
-        <li>
-          <router-link to="/logs/all/" @click="onLinkClick">
-            <span class="icon-history var_grey" />
+        <li @click="onLinkClick">
+          <router-link to="/user/dashboard/overview">
+            <font-awesome-icon :icon="['fas', 'cog']" />
           </router-link>
         </li>
       </ul>
+    </div>
+    <div class="side-navigation__footer">
+      <font-awesome-icon :icon="['fas', 'power-off']" />
     </div>
   </div>
 </template>
 
 <script>
+import { HomeIcon } from "@vue-hero-icons/outline";
 export default {
+  components: {
+    HomeIcon,
+  },
   methods: {
     onLinkClick(e) {
-      var navItems = document.querySelectorAll(
-        ".side-navigation__cta li a span"
-      );
+      var navItems = document.querySelectorAll(".side-navigation__cta li");
       for (var i = 0; i < navItems.length; i++) {
-        console.log(navItems[i]);
-        navItems[i].classList.remove("is-active");
+        navItems[i].classList.remove("active");
       }
-      e.target.classList.toggle("is-active");
+      e.currentTarget.classList.toggle("active");
     },
   },
 };

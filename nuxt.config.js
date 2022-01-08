@@ -42,7 +42,7 @@ export default {
     "./assets/sass/base/_fonts.scss",
   ],
 
-  buildModules: ["@nuxtjs/style-resources"],
+  buildModules: ["@nuxtjs/style-resources", "@nuxtjs/fontawesome"],
 
   styleResources: {
     scss: [
@@ -75,6 +75,21 @@ export default {
         },
       },
     ],
+    [
+      "nuxt-fontawesome",
+      {
+        imports: [
+          {
+            set: "@fortawesome/free-solid-svg-icons",
+            icons: ["fas"],
+          },
+          {
+            set: "@fortawesome/free-brands-svg-icons",
+            icons: ["fab"],
+          },
+        ],
+      },
+    ],
     ["nuxt-sm"],
     [
       "nuxt-buefy",
@@ -102,5 +117,11 @@ export default {
   ignore: [...getStoriesPaths().map((path) => path.replace("../", "~/"))],
   prismic: {
     linkResolver: "~/plugins/link-resolver.js",
+  },
+  fontawesome: {
+    icons: {
+      solid: true,
+      brands: true,
+    },
   },
 };

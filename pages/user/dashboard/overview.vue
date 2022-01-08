@@ -1,22 +1,8 @@
 <template>
   <div>
-    <div v-if="user">YOU ARE LOGGED IN {{ user.email }}</div>
+    <userbar :user="user" />
     <div>Welcome to the dashboard</div>
-    <div class="datalist">
-      <div class="datalist__title"><h3>Turniere</h3></div>
-      <div class="datalist__content">
-        <div
-          class="datalist__item"
-          v-for="(tourney, index) in tourneys"
-          :key="index"
-        >
-          <div class="datalist__item-title">{{ tourney.title }}</div>
-          <div class="datalist__item-action">
-            <button @click="onRegisterClick(tourney.id)">Anmelden</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <tourneylist :list="tourneys" />
   </div>
 </template>
 
@@ -24,10 +10,12 @@
 import Vue from "vue";
 
 import * as TourneyService from "@/services/tourneys/tourneys";
+import Tourneylist from "@/components/generic/tourneylist.vue";
 
 export default Vue.extend({
   name: "DashboardOverview",
-  middleware: ["auth"],
+  components: { Tourneylist },
+  middlewar: ["auth"],
   layout: "dashboard",
   data() {
     return {
