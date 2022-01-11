@@ -21,4 +21,18 @@
   &__key {
     font-weight: 600;
   }
+
+  &__actions {
+    &-text {
+      margin-bottom: rem(20);
+    }
+
+    button {
+      margin-bottom: rem(12);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }

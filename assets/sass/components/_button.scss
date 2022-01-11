@@ -2,4 +2,27 @@
   &--back {
     margin-bottom: rem(40);
   }
+  &--narrow {
+    border: none;
+    padding: rem(4) rem(15);
+    border-radius: rem(20);
+    outline: none;
+    display: block;
+    cursor: pointer;
+
+    &.button--green {
+      background: $green;
+      color: $mine-shaft;
+    }
+
+    &.button--blue {
+      background: $chetwode-blue;
+      color: $white;
+    }
+
+    &.button--red {
+      background: $cinnabar;
+      color: $white;
+    }
+  }
 }
