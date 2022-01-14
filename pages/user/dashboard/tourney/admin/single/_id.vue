@@ -72,7 +72,7 @@
         </widget>
       </div>
     </div>
-    <widget v-if="bracket">
+    <widget v-if="!bracketLoading">
       <template #content>
         <bracket :data="bracket" />
       </template>
@@ -93,6 +93,7 @@ export default {
       tourneyUsers: [],
       amountUsers: "",
       bracket: {},
+      bracketLoading: true,
     };
   },
   async created() {
@@ -102,8 +103,9 @@ export default {
       .eq("id", this.$route.params.id);
 
     this.tourney = tourneys[0];
-
-    this.getBracket();
+    this.$nextTick(function () {
+      this.getBracket();
+    });
   },
   methods: {
     formatDate(date) {
@@ -225,7 +227,7 @@ export default {
           }
         }
 
-        console.log(this.bracket);
+        this.bracketLoading = false;
       }
     },
     async getMatches(round_id) {
