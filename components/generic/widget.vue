@@ -15,6 +15,7 @@ export default {
   props: {
     title: String,
     small: Boolean,
+    innerProps: Object,
   },
 };
 </script>

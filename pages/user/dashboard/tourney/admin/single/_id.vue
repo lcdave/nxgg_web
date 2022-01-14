@@ -72,7 +72,7 @@
         </widget>
       </div>
     </div>
-    <widget>
+    <widget v-if="bracket">
       <template #content>
         <bracket :data="bracket" />
       </template>
@@ -92,60 +92,7 @@ export default {
       tourney: {},
       tourneyUsers: [],
       amountUsers: "",
-      bracket: {
-        rounds: [
-          {
-            matches: [
-              {
-                user1: {
-                  id: 0,
-                  name: "davide",
-                  sort: 1,
-                  score: 1,
-                },
-                user2: {
-                  id: 1,
-                  name: "enemy",
-                  sort: 2,
-                  score: 0,
-                },
-              },
-              {
-                user1: {
-                  id: 2,
-                  name: "dd",
-                  sort: 3,
-                  score: 1,
-                },
-                user2: {
-                  id: 3,
-                  name: "enffemy",
-                  sort: 4,
-                  score: 0,
-                },
-              },
-            ],
-          },
-          {
-            matches: [
-              {
-                user1: {
-                  id: 0,
-                  name: "davide",
-                  sort: 1,
-                  score: 1,
-                },
-                user2: {
-                  id: 0,
-                  name: "dd",
-                  sort: 3,
-                  score: 1,
-                },
-              },
-            ],
-          },
-        ],
-      },
+      bracket: {},
     };
   },
   async created() {
@@ -156,8 +103,7 @@ export default {
 
     this.tourney = tourneys[0];
 
-    console.log(error);
-    console.log(tourneys);
+    this.getBracket();
   },
   methods: {
     formatDate(date) {
@@ -254,6 +200,54 @@ export default {
 
       //TODO: Error handling
       console.log(error);
+    },
+    async getBracket() {
+      const { data, error } = await this.$supabase
+        .from("rounds")
+        .select("*")
+        .eq("bracket_id", this.tourney.id);
+
+      if (!error) {
+        this.bracket.rounds = data;
+
+        // get all matches for each round
+        for (const [i, round] of this.bracket.rounds.entries()) {
+          this.bracket.rounds[i].matches = await this.getMatches(round.id);
+
+          // get all users for each match in the round
+          for (const [j, match] of this.bracket.rounds[i].matches.entries()) {
+            this.bracket.rounds[i].matches[j].user1 = await this.getUser(
+              match.user_1_id
+            );
+            this.bracket.rounds[i].matches[j].user2 = await this.getUser(
+              match.user_2_id
+            );
+          }
+        }
+
+        console.log(this.bracket);
+      }
+    },
+    async getMatches(round_id) {
+      const { data, error } = await this.$supabase
+        .from("matches")
+        .select("*")
+        .eq("round_id", round_id)
+        .eq("bracket_id", this.tourney.id);
+
+      if (!error) {
+        return data;
+      }
+    },
+    async getUser(id) {
+      const { data, error } = await this.$supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", id);
+
+      if (!error) {
+        return data;
+      }
     },
   },
 };
