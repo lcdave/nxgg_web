@@ -59,6 +59,12 @@
                   >
                     Bracket erstellen
                   </button>
+                  <button
+                    class="button--narrow button--red"
+                    @click="deleteBracket()"
+                  >
+                    Bracket löschen
+                  </button>
                   <button class="button--narrow button--blue">
                     Turnier bearbeiten
                   </button>
@@ -94,6 +100,7 @@ export default {
       amountUsers: "",
       bracket: {},
       bracketLoading: true,
+      bracketID: null,
     };
   },
   async created() {
@@ -103,9 +110,14 @@ export default {
       .eq("id", this.$route.params.id);
 
     this.tourney = tourneys[0];
-    this.$nextTick(function () {
-      this.getBracket();
+
+    await this.setBracketID().then(() => {
+      if (this.bracketID) {
+        this.fillBracketObject();
+      }
     });
+
+    await this.setRegisteredTourneyUsers();
   },
   methods: {
     formatDate(date) {
@@ -138,56 +150,50 @@ export default {
           return "";
       }
     },
-    async generateBracket() {
-      this.createBracket();
-      await this.setRegisteredTourneyUsers();
-
-      // generate list of numbers, max is amount of users
-      // used for randomizing the bracket
-      let matchSortingNumbers = [];
-      console.log("tourneyUSers", this.tourneyUsers);
-      console.log("this.amountUsers", this.amountUsers);
-      for (let i = 1; i <= this.amountUsers; i++) {
-        matchSortingNumbers.push(i);
-      }
-
-      // insert bracket user with his sorting number
-      for (const user of this.tourneyUsers) {
-        let random = Math.floor(Math.random() * matchSortingNumbers.length);
-        let randomNumber = matchSortingNumbers[random];
-        matchSortingNumbers.splice(random, 1);
-
-        const { data, error } = await this.$supabase
-          .from("bracket_users")
-          .insert([
-            {
-              user_id: user.profile_id,
-              bracket_id: this.tourney.id,
-              user_sort: randomNumber,
-            },
-          ]);
-
-        if (error) {
-          console.log(error);
-        }
-      }
-
-      // fill bracket with matches
-      for (let i = 1; i <= this.amountUsers; i++) {
-        // bracket id is the same as tourney id
-        const { data, error } = await this.$supabase
-          .from("bracket_users")
-          .select("*")
-          .eq("bracket_id", this.tourney.id);
-      }
-    },
-    async createBracket() {
+    async setBracketID() {
       const { data, error } = await this.$supabase
         .from("brackets")
-        .insert([{ tourney_id: this.tourney.id }]);
+        .select("*")
+        .eq("tourney_id", this.tourney.id);
 
-      //TODO: Error handling
-      console.log(error);
+      if (!error && data.length > 0) {
+        this.bracketID = Number(data[0].id);
+      } else {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("No bracket found");
+        }
+      }
+    },
+    async generateBracket() {
+      await this.createBracketRecordInDB().then(() => {
+        this.generateRounds();
+        this.fillBracketObject();
+      });
+    },
+    async createBracketRecordInDB() {
+      // check if bracket already exists
+      const { data, error } = await this.$supabase
+        .from("brackets")
+        .select("*")
+        .eq("tourney_id", this.tourney.id);
+
+      if (data.length === 0) {
+        const { data, error } = await this.$supabase
+          .from("brackets")
+          .insert([{ tourney_id: this.tourney.id }]);
+
+        this.bracketID = Number(data[0].id);
+
+        console.log(
+          "bracket has been created, id of the bracket is: ",
+          this.bracketID
+        );
+      } else {
+        // throw error
+        console.error("Bracket already exists");
+      }
     },
     async setRegisteredTourneyUsers() {
       const { data, error } = await this.$supabase
@@ -203,18 +209,22 @@ export default {
       //TODO: Error handling
       console.log(error);
     },
-    async getBracket() {
+    async fillBracketObject() {
       const { data, error } = await this.$supabase
         .from("rounds")
         .select("*")
-        .eq("bracket_id", this.tourney.id);
+        .eq("bracket_id", this.bracketID);
+
+      console.log(data);
 
       if (!error) {
         this.bracket.rounds = data;
 
         // get all matches for each round
         for (const [i, round] of this.bracket.rounds.entries()) {
+          console.log("call here", round);
           this.bracket.rounds[i].matches = await this.getMatches(round.id);
+          console.log(await this.getMatches(round.id));
 
           // get all users for each match in the round
           for (const [j, match] of this.bracket.rounds[i].matches.entries()) {
@@ -235,7 +245,7 @@ export default {
         .from("matches")
         .select("*")
         .eq("round_id", round_id)
-        .eq("bracket_id", this.tourney.id);
+        .eq("bracket_id", this.bracketID);
 
       if (!error) {
         return data;
@@ -250,6 +260,84 @@ export default {
       if (!error) {
         return data;
       }
+    },
+    async generateRounds() {
+      this.amountUsers = this.tourneyUsers.length;
+
+      let amountRounds = Math.log2(this.amountUsers);
+
+      for (let i = 0; i < amountRounds; i++) {
+        await this.createRoundInDB();
+      }
+
+      console.log("rounds and matches created");
+    },
+    async createRoundInDB() {
+      const { data, error } = await this.$supabase.from("rounds").insert([
+        {
+          bracket_id: this.bracketID,
+        },
+      ]);
+
+      console.log("rounds created");
+
+      if (!error) {
+        // create matches for the round
+        await this.generateMatches(data[0].id);
+      }
+    },
+    async generateMatches(roundId) {
+      for (let i = 0; i < this.amountUsers; i++) {
+        for (let j = i + 1; j < this.amountUsers; j++) {
+          await this.createMatchInDB(
+            this.tourneyUsers[i].profile_id,
+            this.tourneyUsers[j].profile_id,
+            roundId
+          );
+        }
+      }
+      console.log("matches created");
+    },
+    async createMatchInDB(user1ID, user2ID, roundId) {
+      const { data, error } = await this.$supabase.from("matches").insert([
+        {
+          user_1_id: user1ID,
+          user_2_id: user2ID,
+          round_id: roundId,
+          bracket_id: this.bracketID,
+        },
+      ]);
+
+      if (error) {
+        console.log(error);
+      }
+    },
+    async deleteBracket() {
+      // delete matches from db
+      const { data, error } = await this.$supabase
+        .from("matches")
+        .delete()
+        .eq("bracket_id", this.bracketID);
+
+      if (!error) {
+        // delete rounds from db
+        const { data, error } = await this.$supabase
+          .from("rounds")
+          .delete()
+          .eq("bracket_id", this.bracketID);
+
+        if (!error) {
+          // delete bracket from db
+          const { data, error } = await this.$supabase
+            .from("brackets")
+            .delete()
+            .eq("id", this.bracketID);
+        }
+      }
+
+      console.log("bracket deleted");
+
+      this.bracket = {};
     },
   },
 };
