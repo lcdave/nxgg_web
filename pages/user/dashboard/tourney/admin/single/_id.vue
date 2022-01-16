@@ -101,6 +101,7 @@ export default {
       bracket: {},
       bracketLoading: true,
       bracketID: null,
+      currentRound: 0,
       testMode: true,
     };
   },
@@ -175,11 +176,20 @@ export default {
         }
       }
     },
-    async generateBracket() {
-      await this.createBracketRecordInDB().then(() => {
-        this.generateRounds();
-        this.fillBracketObject();
-      });
+    generateBracket() {
+      this.createBracketRecordInDB()
+        .then(() => {
+          this.generateRounds();
+        })
+
+        .then(() => {
+          this.generateMatches();
+        })
+
+        .then(() => {
+          this.fillBracketObject();
+          console.log("filling bracket done");
+        });
     },
     async createBracketRecordInDB() {
       // check if bracket already exists
@@ -255,12 +265,16 @@ export default {
 
           // get all users for each match in the round
           for (const [j, match] of this.bracket.rounds[i].matches.entries()) {
-            this.bracket.rounds[i].matches[j].user1 = await this.getUser(
-              match.user_1_id
-            );
-            this.bracket.rounds[i].matches[j].user2 = await this.getUser(
-              match.user_2_id
-            );
+            if (match.user_id_1) {
+              this.bracket.rounds[i].matches[j].user_1 = await this.getUser(
+                match.user_id_1
+              );
+            }
+            if (match.user_id_2) {
+              this.bracket.rounds[i].matches[j].user_2 = await this.getUser(
+                match.user_id_2
+              );
+            }
           }
         }
         this.bracketLoading = false;
@@ -302,48 +316,76 @@ export default {
         return data;
       }
     },
-    async generateRounds() {
+    generateRounds() {
       this.amountUsers = this.tourneyUsers.length;
 
       let amountRounds = Math.log2(this.amountUsers);
 
+      console.log("generating rounds... amount of rounds: ", amountRounds);
+
       for (let i = 0; i < amountRounds; i++) {
-        await this.createRoundInDB();
+        this.createRoundInDB(amountRounds);
+        console.log("round ", i, " has been created");
       }
     },
-    async createRoundInDB() {
+    async createRoundInDB(amountRounds) {
+      // create matches for the round
       let tableName = "";
-
       if (this.testMode) {
         tableName = "rounds_test";
       } else {
         tableName = "rounds";
       }
-
       const { data, error } = await this.$supabase.from(tableName).insert([
         {
           bracket_id: this.bracketID,
         },
       ]);
+    },
+    async getRoundsFromDB() {
+      const { data, error } = await this.$supabase
+        .from("rounds_test")
+        .select("*")
+        .eq("bracket_id", this.bracketID);
 
       if (!error) {
-        // create matches for the round
-        await this.generateMatches(data[0].id);
+        return data;
+      } else {
+        console.log(error);
       }
     },
-    async generateMatches(roundId) {
-      let tempUserStack = this.tourneyUsers;
-      for (let i = 0; i < this.amountUsers; i += 2) {
-        if (tempUserStack.length >= 2) {
-          let user1 = tempUserStack[0].profile_id;
-          let user2 = tempUserStack[1].profile_id;
+    generateMatches() {
+      console.log("generating matches...");
 
-          await this.createMatchInDB(user1, user2, roundId).then(() => {
-            tempUserStack.shift();
-            tempUserStack.shift();
-          });
+      this.getRoundsFromDB().then((data) => {
+        // loop over rounds
+        for (const [i, round] of data.entries()) {
+          console.log("generating matches for round ", i);
+          if (i === 0) {
+            let tempUserStack = this.tourneyUsers;
+
+            for (let i = 0; i < this.amountUsers; i += 2) {
+              if (tempUserStack.length >= 2) {
+                let user1 = tempUserStack[0].profile_id;
+                let user2 = tempUserStack[1].profile_id;
+
+                this.createMatchInDB(user1, user2, round.id).then(() => {
+                  tempUserStack.shift();
+                  tempUserStack.shift();
+                });
+              }
+            }
+          } else {
+            console.log("generating placeholder matches");
+
+            let tempAmountOfUsers = this.amountUsers / Math.pow(2, i + 1);
+
+            for (let i = 0; i < tempAmountOfUsers; i++) {
+              this.createMatchInDB(null, null, round.id);
+            }
+          }
         }
-      }
+      });
     },
     async createMatchInDB(user1ID, user2ID, roundId) {
       let tableName = "";
@@ -419,6 +461,7 @@ export default {
 
       this.bracket = {};
     },
+    generateNextRound() {},
   },
 };
 </script>
