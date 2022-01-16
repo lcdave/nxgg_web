@@ -3,7 +3,7 @@
     <div class="match__content">
       <div class="match__user">
         <div class="match__user-name">
-          <span v-if="match.user1">{{ match.user1[0].username }}</span>
+          <span v-if="match.user_1">{{ match.user_1[0].username }}</span>
         </div>
         <div class="match__user-result">
           <input type="text" v-model="user1Score" />
@@ -11,7 +11,7 @@
       </div>
       <div class="match__user">
         <div class="match__user-name">
-          <span v-if="match.user2">{{ match.user2[0].username }}</span>
+          <span v-if="match.user_2">{{ match.user_2[0].username }}</span>
         </div>
         <div class="match__user-result">
           <input type="text" v-model="user2Score" />
@@ -37,7 +37,7 @@ export default Vue.extend({
     };
   },
   created() {
-    if (this.match.user1 && this.match.user2) {
+    if (this.match.user_1 && this.match.user_2) {
       this.getMatchScore();
     }
   },
@@ -60,18 +60,30 @@ export default Vue.extend({
       }
     },
     async saveMatchScore() {
-      const { data, error } = await this.$supabase
-        .from("matches_test")
-        .update({
-          user_1_score: this.user1Score,
-          user_2_score: this.user2Score,
-        })
-        .eq("id", this.match.id);
+      if (this.match.user_1 && this.match.user_2) {
+        console.log(this.match);
+        let winnerID = null;
 
-      if (!error) {
-        console.log(data);
-      } else {
-        console.log(error);
+        if (this.user1Score > this.user2Score) {
+          winnerID = this.match.user_1[0].id;
+        } else {
+          winnerID = this.match.user_2[0].id;
+        }
+
+        const { data, error } = await this.$supabase
+          .from("matches_test")
+          .update({
+            user_1_score: this.user1Score,
+            user_2_score: this.user2Score,
+            winner_id: winnerID,
+          })
+          .eq("id", this.match.id);
+
+        if (!error) {
+          console.log("Match saved");
+        } else {
+          console.log(error);
+        }
       }
     },
   },

@@ -1,6 +1,5 @@
 <template>
   <div class="bracket">
-    <button class="button" @click="saveResults()">Resultate speichern</button>
     <div class="round" v-for="(round, index) in data.rounds" :key="index">
       <match
         v-for="(match, index) in round.matches"
@@ -28,13 +27,7 @@ export default Vue.extend({
   data() {
     return {};
   },
-  methods: {
-    saveResults() {
-      this.$refs.bracketMatch.forEach((match) => {
-        match.saveMatchScore();
-      });
-    },
-  },
+  methods: {},
 });
 </script>
 

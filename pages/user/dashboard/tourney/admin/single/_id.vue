@@ -79,7 +79,16 @@
       </div>
       <widget v-if="!bracketLoading">
         <template #content>
-          <bracket :data="bracket" />
+          <button class="button--narrow button--blue" @click="saveResults()">
+            Resultate speichern
+          </button>
+          <button
+            class="button--narrow button--blue"
+            @click="generateNextRound()"
+          >
+            Nächste Runde generieren
+          </button>
+          <bracket :data="bracket" ref="bracket" />
         </template>
       </widget>
     </div>
@@ -208,7 +217,7 @@ export default {
       if (data.length === 0) {
         const { data, error } = await this.$supabase
           .from(tableName)
-          .insert([{ tourney_id: this.tourney.id }]);
+          .insert([{ tourney_id: this.tourney.id, currentRound: 0 }]);
 
         this.bracketID = Number(data[0].id);
 
@@ -219,6 +228,41 @@ export default {
       } else {
         // throw error
         console.error("Bracket already exists");
+      }
+    },
+    async setCurrentBracketRound() {
+      let tableName = "";
+
+      if (this.testMode) {
+        tableName = "brackets_test";
+      } else {
+        tableName = "brackets";
+      }
+
+      await this.$supabase
+        .from(tableName)
+        .insert("currentRound", 0)
+        .eq("tourney_id", this.tourney.id);
+    },
+    async getCurrentBracketRound() {
+      let tableName = "";
+
+      if (this.testMode) {
+        tableName = "brackets_test";
+      } else {
+        tableName = "brackets";
+      }
+
+      const { data, error } = await this.$supabase
+        .from(tableName)
+        .select("currentRound")
+        .eq("tourney_id", this.tourney.id);
+
+      if (!error && data.length > 0) {
+        return data[0].currentRound;
+      } else {
+        console.log(error);
+        return false;
       }
     },
     async setRegisteredTourneyUsers() {
@@ -265,14 +309,14 @@ export default {
 
           // get all users for each match in the round
           for (const [j, match] of this.bracket.rounds[i].matches.entries()) {
-            if (match.user_id_1) {
+            if (match.user_1_id) {
               this.bracket.rounds[i].matches[j].user_1 = await this.getUser(
-                match.user_id_1
+                match.user_1_id
               );
             }
-            if (match.user_id_2) {
+            if (match.user_2_id) {
               this.bracket.rounds[i].matches[j].user_2 = await this.getUser(
-                match.user_id_2
+                match.user_2_id
               );
             }
           }
@@ -328,7 +372,7 @@ export default {
         console.log("round ", i, " has been created");
       }
     },
-    async createRoundInDB(amountRounds) {
+    async createRoundInDB() {
       // create matches for the round
       let tableName = "";
       if (this.testMode) {
@@ -336,7 +380,7 @@ export default {
       } else {
         tableName = "rounds";
       }
-      const { data, error } = await this.$supabase.from(tableName).insert([
+      await this.$supabase.from(tableName).insert([
         {
           bracket_id: this.bracketID,
         },
@@ -369,10 +413,12 @@ export default {
                 let user1 = tempUserStack[0].profile_id;
                 let user2 = tempUserStack[1].profile_id;
 
-                this.createMatchInDB(user1, user2, round.id).then(() => {
-                  tempUserStack.shift();
-                  tempUserStack.shift();
-                });
+                console.log("user1: ", user1, " user2: ", user2);
+
+                tempUserStack.shift();
+                tempUserStack.shift();
+
+                this.createMatchInDB(user1, user2, round.id);
               }
             }
           } else {
@@ -461,7 +507,32 @@ export default {
 
       this.bracket = {};
     },
-    generateNextRound() {},
+    saveResults() {
+      this.$refs.bracket.$refs.bracketMatch.forEach((match) => {
+        match.saveMatchScore();
+      });
+    },
+    async generateNextRound() {
+      this.getCurrentBracketRound().then((data) => {
+        console.log(data);
+
+        let lastRoundWinners = [];
+
+        for (let i = 0; i < this.bracket.rounds[data].length; i++) {}
+
+        // iterate over matches in current round
+        for (const [i, match] of this.bracket.rounds[data].matches.entries()) {
+          let winner_id = match.winner_id;
+
+          // get user
+          this.getUser(winner_id).then((res) => {
+            lastRoundWinners.push(res[0]);
+          });
+        }
+
+        console.log("lastRoundWinners: ", lastRoundWinners);
+      });
+    },
   },
 };
 </script>
