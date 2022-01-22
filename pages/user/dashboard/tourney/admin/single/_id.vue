@@ -88,6 +88,12 @@
           >
             Nächste Runde generieren
           </button>
+          <button
+            class="button--narrow button--blue"
+            @click="resetCurrentRound()"
+          >
+            Aktuelle Runde löschen
+          </button>
           <bracket :data="bracket" ref="bracket" />
         </template>
       </widget>
@@ -161,6 +167,12 @@ export default {
           return "";
       }
     },
+    async setCurrentBracketRound(currentRound) {
+      await this.$supabase
+        .from("brackets_test")
+        .update({ currentRound: currentRound })
+        .eq("tourney_id", this.tourney.id);
+    },
     async setBracketID() {
       let tableName = "";
 
@@ -185,8 +197,13 @@ export default {
         }
       }
     },
-    generateBracket() {
-      this.createBracketRecordInDB()
+    async generateBracket() {
+      await this.createBracketRecordInDB();
+      await this.generateRounds();
+      await this.generateMatches();
+      await this.fillBracketObject();
+
+      /*  this.createBracketRecordInDB()
         .then(() => {
           this.generateRounds();
         })
@@ -199,6 +216,7 @@ export default {
           this.fillBracketObject();
           console.log("filling bracket done");
         });
+    },*/
     },
     async createBracketRecordInDB() {
       // check if bracket already exists
@@ -229,20 +247,6 @@ export default {
         // throw error
         console.error("Bracket already exists");
       }
-    },
-    async setCurrentBracketRound() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "brackets_test";
-      } else {
-        tableName = "brackets";
-      }
-
-      await this.$supabase
-        .from(tableName)
-        .insert("currentRound", 0)
-        .eq("tourney_id", this.tourney.id);
     },
     async getCurrentBracketRound() {
       let tableName = "";
@@ -336,7 +340,8 @@ export default {
         .from(tableName)
         .select("*")
         .eq("round_id", round_id)
-        .eq("bracket_id", this.bracketID);
+        .eq("bracket_id", this.bracketID)
+        .order("match_sort", { ascending: true });
 
       if (!error) {
         return data;
@@ -360,7 +365,19 @@ export default {
         return data;
       }
     },
-    generateRounds() {
+    async getFirstRoundID() {
+      const { data, error } = await this.$supabase
+        .from("rounds_test")
+        .select("id")
+        .eq("bracket_id", this.bracketID)
+        .order("id", { ascending: true })
+        .limit(1);
+
+      if (!error) {
+        return data[0].id;
+      }
+    },
+    async generateRounds() {
       this.amountUsers = this.tourneyUsers.length;
 
       let amountRounds = Math.log2(this.amountUsers);
@@ -368,12 +385,19 @@ export default {
       console.log("generating rounds... amount of rounds: ", amountRounds);
 
       for (let i = 0; i < amountRounds; i++) {
-        this.createRoundInDB(amountRounds);
+        await this.createRoundInDB(amountRounds);
         console.log("round ", i, " has been created");
       }
+
+      const firstRoundID = await this.getFirstRoundID();
+
+      console.log("first round id: ", firstRoundID);
+
+      await setCurrentBracketRound(firstRoundID);
+
+      console.log("all rounds generated");
     },
     async createRoundInDB() {
-      // create matches for the round
       let tableName = "";
       if (this.testMode) {
         tableName = "rounds_test";
@@ -387,53 +411,58 @@ export default {
       ]);
     },
     async getRoundsFromDB() {
+      console.log("hey rounds from db call here");
       const { data, error } = await this.$supabase
         .from("rounds_test")
         .select("*")
-        .eq("bracket_id", this.bracketID);
+        .eq("bracket_id", this.bracketID)
+        .order("id", { ascending: true });
 
       if (!error) {
+        console.log("hey my result for the rounds: ", data);
         return data;
       } else {
         console.log(error);
       }
     },
-    generateMatches() {
+    async generateMatches() {
       console.log("generating matches...");
 
-      this.getRoundsFromDB().then((data) => {
-        // loop over rounds
-        for (const [i, round] of data.entries()) {
-          console.log("generating matches for round ", i);
-          if (i === 0) {
-            let tempUserStack = this.tourneyUsers;
+      const data = await this.getRoundsFromDB();
 
-            for (let i = 0; i < this.amountUsers; i += 2) {
-              if (tempUserStack.length >= 2) {
-                let user1 = tempUserStack[0].profile_id;
-                let user2 = tempUserStack[1].profile_id;
+      console.log("rounds: ", data);
+      // loop over rounds
+      for (const [i, round] of data.entries()) {
+        console.log("generating matches for round ", i);
+        if (i === 0) {
+          let tempUserStack = this.tourneyUsers;
 
-                console.log("user1: ", user1, " user2: ", user2);
+          for (let i = 0; i < this.amountUsers; i += 2) {
+            if (tempUserStack.length >= 2) {
+              let user1 = tempUserStack[0].profile_id;
+              let user2 = tempUserStack[1].profile_id;
 
-                tempUserStack.shift();
-                tempUserStack.shift();
+              console.log("user1: ", user1, " user2: ", user2);
 
-                this.createMatchInDB(user1, user2, round.id);
-              }
-            }
-          } else {
-            console.log("generating placeholder matches");
+              tempUserStack.shift();
+              tempUserStack.shift();
 
-            let tempAmountOfUsers = this.amountUsers / Math.pow(2, i + 1);
-
-            for (let i = 0; i < tempAmountOfUsers; i++) {
-              this.createMatchInDB(null, null, round.id);
+              await this.createMatchInDB(user1, user2, round.id, i);
             }
           }
+        } else {
+          console.log("generating placeholder matches");
+
+          let tempAmountOfUsers = this.amountUsers / Math.pow(2, i + 1);
+
+          for (let i = 0; i < tempAmountOfUsers; i++) {
+            await this.createMatchInDB(null, null, round.id, i * 2);
+          }
+          console.log("placeholder matches created for round ", i);
         }
-      });
+      }
     },
-    async createMatchInDB(user1ID, user2ID, roundId) {
+    async createMatchInDB(user1ID, user2ID, roundId, matchSort) {
       let tableName = "";
 
       if (this.testMode) {
@@ -448,6 +477,7 @@ export default {
           user_2_id: user2ID,
           round_id: roundId,
           bracket_id: this.bracketID,
+          match_sort: matchSort,
         },
       ]);
 
@@ -513,25 +543,92 @@ export default {
       });
     },
     async generateNextRound() {
-      this.getCurrentBracketRound().then((data) => {
-        console.log(data);
+      const currentRoundID = await this.getCurrentBracketRound();
+      const nextRoundID = currentRoundID + 1;
 
-        let lastRoundWinners = [];
+      console.log("current round: ", currentRoundID);
+      console.log("next round: ", nextRoundID);
 
-        for (let i = 0; i < this.bracket.rounds[data].length; i++) {}
+      let lastRoundWinners = [];
 
-        // iterate over matches in current round
-        for (const [i, match] of this.bracket.rounds[data].matches.entries()) {
-          let winner_id = match.winner_id;
+      // find roundID in this.bracket.rounds that has id = currentRoundID
+      const currentRound = this.bracket.rounds.find(
+        (round) => round.id === currentRoundID
+      );
 
-          // get user
-          this.getUser(winner_id).then((res) => {
-            lastRoundWinners.push(res[0]);
-          });
+      console.log("current round: ", currentRound);
+
+      // iterate over matches in current round
+      for (const [i, match] of currentRound.matches.entries()) {
+        console.log("match: ", match);
+        let winner_id = match.winner_id;
+
+        // get user
+        const user = await this.getUser(winner_id);
+        lastRoundWinners.push(user[0]);
+      }
+
+      const nextRoundMatches = await this.$supabase
+        .from("matches_test")
+        .select("*")
+        .eq("round_id", nextRoundID);
+
+      console.log("next round matches: ", nextRoundMatches);
+
+      const amountOfNextRoundMatches = nextRoundMatches.data.length;
+
+      console.log(amountOfNextRoundMatches);
+
+      let tempUserStack = lastRoundWinners;
+
+      console.log("tempUserStack: ", tempUserStack);
+
+      for (let i = 0; i < amountOfNextRoundMatches * 2; i += 2) {
+        if (tempUserStack.length >= 2) {
+          let user1 = tempUserStack[0].id;
+          let user2 = tempUserStack[1].id;
+
+          tempUserStack.shift();
+          tempUserStack.shift();
+
+          const { matchE, err } = await this.$supabase
+            .from("matches_test")
+            .update({
+              user_1_id: user1,
+              user_2_id: user2,
+              bracket_id: this.bracketID,
+            })
+            .match({ round_id: nextRoundID, match_sort: i });
         }
+      }
 
-        console.log("lastRoundWinners: ", lastRoundWinners);
-      });
+      await this.setCurrentBracketRound(nextRoundID);
+      await this.fillBracketObject();
+    },
+    async resetCurrentRound() {
+      const currentRoundID = await this.getCurrentBracketRound();
+
+      const previousRoundID = currentRoundID - 1;
+
+      console.log("current round: ", currentRoundID);
+
+      // find roundID in this.bracket.rounds that has id = currentRoundID
+      const currentRound = this.bracket.rounds.find(
+        (round) => round.id === currentRoundID
+      );
+
+      await this.$supabase
+        .from("matches_test")
+        .update({
+          user_1_id: null,
+          user_2_id: null,
+          user_1_score: null,
+          user_2_score: null,
+          winner_id: null,
+        })
+        .match({ round_id: currentRoundID });
+
+      await this.setCurrentBracketRound(previousRoundID);
     },
   },
 };

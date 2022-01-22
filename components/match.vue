@@ -6,7 +6,7 @@
           <span v-if="match.user_1">{{ match.user_1[0].username }}</span>
         </div>
         <div class="match__user-result">
-          <input type="text" v-model="user1Score" />
+          <input type="number" v-model="user1Score" />
         </div>
       </div>
       <div class="match__user">
@@ -14,7 +14,7 @@
           <span v-if="match.user_2">{{ match.user_2[0].username }}</span>
         </div>
         <div class="match__user-result">
-          <input type="text" v-model="user2Score" />
+          <input type="number" v-model="user2Score" />
         </div>
       </div>
     </div>
@@ -64,7 +64,10 @@ export default Vue.extend({
         console.log(this.match);
         let winnerID = null;
 
+        console.log("score1: ", this.user1Score, " score2: ", this.user2Score);
+
         if (this.user1Score > this.user2Score) {
+          console.log("user1 won: ", this.match.user_1[0].username);
           winnerID = this.match.user_1[0].id;
         } else {
           winnerID = this.match.user_2[0].id;
@@ -73,8 +76,8 @@ export default Vue.extend({
         const { data, error } = await this.$supabase
           .from("matches_test")
           .update({
-            user_1_score: this.user1Score,
-            user_2_score: this.user2Score,
+            user_1_score: parseInt(this.user1Score),
+            user_2_score: parseInt(this.user2Score),
             winner_id: winnerID,
           })
           .eq("id", this.match.id);
