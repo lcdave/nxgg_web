@@ -14,6 +14,8 @@ import Vue from "vue";
 import Tourneylist from "@/components/generic/tourneylist.vue";
 import Widget from "@/components/generic/widget.vue";
 
+import * as UserService from "@/services/supabase/user";
+
 export default Vue.extend({
   name: "TourneyAdmin",
   components: { Tourneylist, Widget },
@@ -22,6 +24,7 @@ export default Vue.extend({
   data() {
     return {
       tourneys: [],
+      userProfile: null,
     };
   },
   async created() {
@@ -31,14 +34,18 @@ export default Vue.extend({
 
     this.tourneys = tourneys;
 
-    console.log(error);
-    console.log(tourneys);
+    await UserService.getProfile();
   },
   methods: {
     async onRegisterClick(tourneyID) {
       const { data, error } = await this.$supabase
         .from("profile_tourneys_nm")
         .insert([{ profile_id: this.user.id, tourney_id: tourneyID }]);
+    },
+    async getUserProfile() {
+      const data = await this.$supabase.from("profiles").select("*");
+
+      console.log("user: ", data.data);
     },
   },
 });

@@ -6,4 +6,7 @@ export const mutations = {
   setUser(state, user) {
     state.user = user;
   },
+  setAdmin(state, admin) {
+    state.user.admin = admin;
+  },
 };

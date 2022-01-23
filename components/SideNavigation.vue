@@ -15,7 +15,7 @@
             <font-awesome-icon :icon="['fas', 'gamepad']" />
           </router-link>
         </li>
-        <li @click="onLinkClick">
+        <li @click="onLinkClick" v-if="isAdmin">
           <router-link to="/user/dashboard/tourney/admin">
             <font-awesome-icon :icon="['fas', 'user-shield']" />
           </router-link>
@@ -38,6 +38,22 @@ import { HomeIcon } from "@vue-hero-icons/outline";
 export default {
   components: {
     HomeIcon,
+  },
+  data() {
+    return {
+      isAdmin: false,
+    };
+  },
+  async created() {
+    const user = this.$supabase.auth.user();
+
+    let { data } = await this.$supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    this.isAdmin = data.isAdmin;
   },
   methods: {
     onLinkClick(e) {

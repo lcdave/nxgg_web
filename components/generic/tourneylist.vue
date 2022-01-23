@@ -75,7 +75,7 @@ export default {
   name: "",
   props: {
     list: {
-      type: Object,
+      type: Array,
     },
     adminMode: {
       type: Boolean,

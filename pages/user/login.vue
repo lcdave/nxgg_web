@@ -65,14 +65,18 @@ export default {
     submitted: false,
     email: "",
     password: "",
+    userProfile: null,
   }),
-  created() {
+  async created() {
     this.profile = this.$supabase.auth.user();
 
     //TODO: Use middleware to make this redirect (avoids redirect delay)
     if (this.profile) {
       this.$router.push("/user/dashboard/overview");
     }
+
+    await this.getUserProfile();
+    console.log("user profile: ", this.userProfile);
   },
   methods: {
     async signIn() {
@@ -80,14 +84,26 @@ export default {
         email: this.email,
         password: this.password,
       });
+      await this.getUserProfile();
+      console.log("user profile: ", this.userProfile);
+
+      //const isAdmin = userProfile.isAdmin;
 
       if (!error) {
         this.profile = user;
         this.$store.commit("auth/setUser", user);
+        //this.$store.commit("auth/setAdmin", isAdmin);
         this.$router.push("/user/dashboard/overview");
       } else {
         console.log(error);
       }
+    },
+    async getUserProfile() {
+      const { user } = await this.$supabase.from("profiles").select("*");
+
+      console.log("user profile: ", user);
+
+      this.userProfile = user;
     },
   },
   async mounted() {
