@@ -19,11 +19,12 @@ import * as UserService from "@/services/supabase/user";
 export default Vue.extend({
   name: "TourneyAdmin",
   components: { Tourneylist, Widget },
-  middleware: ["auth"],
+  middleware: ["auth", "admin"],
   layout: "dashboard",
   data() {
     return {
       tourneys: [],
+      user: null,
       userProfile: null,
     };
   },
@@ -32,20 +33,21 @@ export default Vue.extend({
       .from("tourneys")
       .select("*");
 
+    await UserService.getAuthUser().then((user) => {
+      this.user = user;
+    });
+
     this.tourneys = tourneys;
 
-    await UserService.getProfile();
+    await UserService.getProfile().then((profile) => {
+      this.userProfile = profile;
+    });
   },
   methods: {
     async onRegisterClick(tourneyID) {
       const { data, error } = await this.$supabase
         .from("profile_tourneys_nm")
         .insert([{ profile_id: this.user.id, tourney_id: tourneyID }]);
-    },
-    async getUserProfile() {
-      const data = await this.$supabase.from("profiles").select("*");
-
-      console.log("user: ", data.data);
     },
   },
 });

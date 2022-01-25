@@ -35,6 +35,9 @@
 
 <script>
 import { HomeIcon } from "@vue-hero-icons/outline";
+
+import * as UserService from "@/services/supabase/user";
+
 export default {
   components: {
     HomeIcon,
@@ -45,15 +48,7 @@ export default {
     };
   },
   async created() {
-    const user = this.$supabase.auth.user();
-
-    let { data } = await this.$supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
-    this.isAdmin = data.isAdmin;
+    this.isAdmin = await UserService.checkIfAdminUser();
   },
   methods: {
     onLinkClick(e) {

@@ -1,5 +1,7 @@
-export default function ({ redirect, store, route }) {
-  const isAdmin = store.state.auth.user.admin ? true : false;
+import * as UserService from "@/services/supabase/user";
+
+export default async function ({ redirect, store, route }) {
+  const isAdmin = await UserService.checkIfAdminUser();
 
   console.log("is admin: ", isAdmin);
 

@@ -24,6 +24,8 @@
 <script>
 import Vue from "vue";
 
+import * as QueryService from "@/services/supabase/query";
+
 export default Vue.extend({
   props: {
     match: {
@@ -34,12 +36,20 @@ export default Vue.extend({
     return {
       user1Score: null,
       user2Score: null,
+      currentBracketRound: null,
     };
   },
-  created() {
+  async created() {
     if (this.match.user_1 && this.match.user_2) {
       this.getMatchScore();
     }
+
+    this.currentBracketRound = await QueryService.getFieldFromTable(
+      "brackets_test",
+      "currentRound",
+      "id",
+      this.match.bracket_id
+    );
   },
   methods: {
     async getMatchScore() {
