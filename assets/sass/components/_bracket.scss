@@ -65,6 +65,13 @@
     }
 
     &-result {
+      &.is-winner {
+        input {
+          background: $green;
+          color: #20242a;
+        }
+      }
+
       input {
         height: 100%;
         width: rem(50);
@@ -74,6 +81,16 @@
         outline: none;
         border: none;
         color: $white;
+
+        &[type="number"]::-webkit-outer-spin-button,
+        &[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        &[type="number"] {
+          -moz-appearance: textfield;
+        }
       }
     }
   }

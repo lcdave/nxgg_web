@@ -5,16 +5,16 @@
         <div class="match__user-name">
           <span v-if="match.user_1">{{ match.user_1[0].username }}</span>
         </div>
-        <div class="match__user-result">
-          <input type="number" v-model="user1Score" />
+        <div class="match__user-result" :class="{ 'is-winner': user1Winner }">
+          <input type="number" v-model="user1Score" :readonly="isReadonly" />
         </div>
       </div>
       <div class="match__user">
         <div class="match__user-name">
           <span v-if="match.user_2">{{ match.user_2[0].username }}</span>
         </div>
-        <div class="match__user-result">
-          <input type="number" v-model="user2Score" />
+        <div class="match__user-result" :class="{ 'is-winner': user2Winner }">
+          <input type="number" v-model="user2Score" :readonly="isReadonly" />
         </div>
       </div>
     </div>
@@ -35,13 +35,17 @@ export default Vue.extend({
   data() {
     return {
       user1Score: null,
+      user1Winner: false,
       user2Score: null,
+      user2Winner: false,
+      matchRound: null,
       currentBracketRound: null,
+      isReadonly: false,
     };
   },
   async created() {
     if (this.match.user_1 && this.match.user_2) {
-      this.getMatchScore();
+      this.setMatchData();
     }
 
     this.currentBracketRound = await QueryService.getFieldFromTable(
@@ -50,17 +54,26 @@ export default Vue.extend({
       "id",
       this.match.bracket_id
     );
+
+    if (this.currentBracketRound.currentRound === this.matchRound) {
+      this.isReadonly = false;
+    } else {
+      this.isReadonly = true;
+    }
   },
   methods: {
-    async getMatchScore() {
+    async setMatchData() {
       const { data, error } = await this.$supabase
         .from("matches_test")
         .select("*")
         .eq("id", this.match.id);
 
       if (!error && data.length > 0) {
+        console.log("debug data", data);
         this.user1Score = data[0].user_1_score;
         this.user2Score = data[0].user_2_score;
+        this.matchRound = data[0].round_id;
+        this.setWinner();
       } else {
         if (error) {
           console.log(error);
@@ -96,6 +109,17 @@ export default Vue.extend({
           console.log("Match saved");
         } else {
           console.log(error);
+        }
+      }
+    },
+    setWinner() {
+      if (this.user1Score && this.user2Score) {
+        if (this.user1Score > this.user2Score) {
+          this.user1Winner = true;
+          this.user2Winner = false;
+        } else {
+          this.user1Winner = false;
+          this.user2Winner = true;
         }
       }
     },
