@@ -5,6 +5,7 @@
         v-for="(match, index) in round.matches"
         :key="index"
         :match="match"
+        :currentRound="data.currentRound"
         ref="bracketMatch"
       ></match>
     </div>
@@ -24,10 +25,6 @@ export default Vue.extend({
       type: Object,
     },
   },
-  data() {
-    return {};
-  },
-  methods: {},
 });
 </script>
 

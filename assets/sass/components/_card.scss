@@ -22,16 +22,41 @@
     font-weight: 600;
   }
 
+  &__section {
+    margin-bottom: rem(20);
+    padding-bottom: rem(20);
+    border-bottom: rem(1) solid $mine-shaft-light;
+
+    &-title {
+      margin-bottom: rem(10);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+
   &__actions {
+    display: flex;
+
     &-text {
       margin-bottom: rem(20);
     }
 
     button {
-      margin-bottom: rem(12);
+      margin-right: rem(10);
 
       &:last-child {
-        margin-bottom: 0;
+        margin-right: 0;
+      }
+    }
+
+    .icon {
+      margin-right: rem(10);
+
+      &:last-child {
+        margin-right: 0;
       }
     }
   }

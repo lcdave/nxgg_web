@@ -3,101 +3,137 @@
     <div class="site-title">
       <h2>Turnier Verwaltung</h2>
     </div>
+    <widget small>
+      <template #content>
+        <card>
+          <template #title>
+            <h3>{{ tourney.title }}</h3>
+          </template>
+          <template #content>
+            <div class="card__row">
+              <div class="card__key">Datum</div>
+              <div class="card__value">{{ formatDate(tourney.date) }}</div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Modus</div>
+              <div class="card__value">{{ getModus(tourney.mode) }}</div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Plattform</div>
+              <div class="card__value">
+                {{ getPlatform(tourney.platform) }}
+              </div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Preis</div>
+              <div class="card__value">{{ tourney.price }}</div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Eintrittspreis</div>
+              <div class="card__value">{{ tourney.entry }}</div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Anz. Teams</div>
+              <div class="card__value">{{ tourney.amount_teams }}</div>
+            </div>
+          </template>
+        </card>
+      </template>
+    </widget>
     <div class="widget-container">
       <div class="widget-container__row">
-        <widget small>
+        <widget>
           <template #content>
             <card>
               <template #title>
-                <h3>{{ tourney.title }}</h3>
+                <h3>Turnier</h3>
               </template>
               <template #content>
-                <div class="card__row">
-                  <div class="card__key">Datum</div>
-                  <div class="card__value">{{ formatDate(tourney.date) }}</div>
-                </div>
-                <div class="card__row">
-                  <div class="card__key">Modus</div>
-                  <div class="card__value">{{ getModus(tourney.mode) }}</div>
-                </div>
-                <div class="card__row">
-                  <div class="card__key">Plattform</div>
-                  <div class="card__value">
-                    {{ getPlatform(tourney.platform) }}
-                  </div>
-                </div>
-                <div class="card__row">
-                  <div class="card__key">Preis</div>
-                  <div class="card__value">{{ tourney.price }}</div>
-                </div>
-                <div class="card__row">
-                  <div class="card__key">Eintrittspreis</div>
-                  <div class="card__value">{{ tourney.entry }}</div>
-                </div>
-                <div class="card__row">
-                  <div class="card__key">Anz. Teams</div>
-                  <div class="card__value">{{ tourney.amount_teams }}</div>
+                <div class="card__actions">
+                  <font-awesome-icon
+                    :icon="['fas', 'pen']"
+                    class="icon icon--blue"
+                  />
+                  <font-awesome-icon
+                    :icon="['fas', 'trash']"
+                    class="icon icon--red"
+                  />
                 </div>
               </template>
             </card>
           </template>
         </widget>
-        <widget small>
+        <widget>
           <template #content>
             <card>
               <template #title>
-                <h3>Verwaltung</h3>
+                <h3>Bracket</h3>
               </template>
               <template #content>
                 <div class="card__actions">
-                  <div class="card__actions-text">
-                    Bitte wähle eine Aktion aus:
-                  </div>
-                  <button
-                    class="button--narrow button--green"
+                  <font-awesome-icon
+                    :icon="['fas', 'plus-circle']"
                     @click="generateBracket()"
-                  >
-                    Bracket erstellen
-                  </button>
-                  <button
-                    class="button--narrow button--red"
-                    @click="deleteBracket()"
-                  >
-                    Bracket löschen
-                  </button>
-                  <button class="button--narrow button--blue">
-                    Turnier bearbeiten
-                  </button>
-                  <button class="button--narrow button--red">
-                    Turnier löschen
-                  </button>
+                    class="icon icon--green"
+                  />
+                  <font-awesome-icon
+                    :icon="['fas', 'trash']"
+                    @click="
+                      showModal(
+                        'deleteBracket',
+                        'Bestätigen',
+                        'Soll das Bracket wirklich gelöscht werden?'
+                      )
+                    "
+                    class="icon icon--red"
+                  />
+                </div>
+              </template>
+            </card>
+          </template>
+        </widget>
+        <widget>
+          <template #content>
+            <card>
+              <template #title>
+                <h3>Runde</h3>
+              </template>
+              <template #content>
+                <div class="card__actions">
+                  <font-awesome-icon
+                    :icon="['fas', 'save']"
+                    @click="saveResults()"
+                    class="icon icon--green"
+                  />
+                  <font-awesome-icon
+                    :icon="['fas', 'plus-circle']"
+                    @click="generateNextRound()"
+                    class="icon icon--green"
+                  />
+                  <font-awesome-icon
+                    :icon="['fas', 'trash']"
+                    @click="resetCurrentRound()"
+                    class="icon icon--red"
+                  />
                 </div>
               </template>
             </card>
           </template>
         </widget>
       </div>
-      <widget v-if="!bracketLoading">
-        <template #content>
-          <button class="button--narrow button--blue" @click="saveResults()">
-            Resultate speichern
-          </button>
-          <button
-            class="button--narrow button--blue"
-            @click="generateNextRound()"
-          >
-            Nächste Runde generieren
-          </button>
-          <button
-            class="button--narrow button--blue"
-            @click="resetCurrentRound()"
-          >
-            Aktuelle Runde löschen
-          </button>
-          <bracket :data="bracket" ref="bracket" />
-        </template>
-      </widget>
     </div>
+    <widget v-if="!bracketLoading">
+      <template #content>
+        <bracket :data="bracket" ref="bracket" />
+      </template>
+    </widget>
+    <modal
+      :title="modal.title"
+      :content="modal.content"
+      :isActive="modal.isActive"
+      :trigger="modal.trigger"
+      @accept="onModalAccept"
+    />
   </div>
 </template>
 
@@ -105,9 +141,11 @@
 import Widget from "@/components/generic/widget.vue";
 import Card from "@/components/generic/card.vue";
 import Bracket from "@/components/generic/bracket.vue";
+import Modal from "@/components/generic/modal.vue";
+
 export default {
   layout: "dashboard",
-  components: { Widget, Card, Bracket },
+  components: { Widget, Card, Bracket, Modal },
   data() {
     return {
       tourney: {},
@@ -116,8 +154,18 @@ export default {
       bracket: {},
       bracketLoading: true,
       bracketID: null,
-      currentRound: 0,
       testMode: true,
+      modal: {
+        title: "",
+        content: "",
+        isActive: false,
+        trigger: "",
+      },
+      notification: {
+        isVisible: false,
+        type: "",
+        message: "",
+      },
     };
   },
   async created() {
@@ -128,7 +176,7 @@ export default {
 
     this.tourney = tourneys[0];
 
-    await this.setBracketID().then(() => {
+    await this.setBracketBasicFields().then(() => {
       if (this.bracketID) {
         this.fillBracketObject();
       }
@@ -173,7 +221,7 @@ export default {
         .update({ currentRound: currentRound })
         .eq("tourney_id", this.tourney.id);
     },
-    async setBracketID() {
+    async setBracketBasicFields() {
       let tableName = "";
 
       if (this.testMode) {
@@ -189,6 +237,7 @@ export default {
 
       if (!error && data.length > 0) {
         this.bracketID = Number(data[0].id);
+        this.bracket.currentRound = data[0].currentRound;
       } else {
         if (error) {
           console.log(error);
@@ -198,25 +247,25 @@ export default {
       }
     },
     async generateBracket() {
+      this.$toast.show("Bracket wird erstellt, bitte warten...", {
+        duration: 4000,
+        type: "success",
+        position: "top-right",
+        icon: {
+          name: "hourglass-half",
+        },
+      });
+
       await this.createBracketRecordInDB();
       await this.generateRounds();
       await this.generateMatches();
       await this.fillBracketObject();
 
-      /*  this.createBracketRecordInDB()
-        .then(() => {
-          this.generateRounds();
-        })
-
-        .then(() => {
-          this.generateMatches();
-        })
-
-        .then(() => {
-          this.fillBracketObject();
-          console.log("filling bracket done");
-        });
-    },*/
+      this.$toast.show("Bracket wurde erstellt", {
+        duration: 4000,
+        type: "success",
+        position: "top-right",
+      });
     },
     async createBracketRecordInDB() {
       // check if bracket already exists
@@ -238,35 +287,16 @@ export default {
           .insert([{ tourney_id: this.tourney.id, currentRound: 0 }]);
 
         this.bracketID = Number(data[0].id);
-
-        console.log(
-          "bracket has been created, id of the bracket is: ",
-          this.bracketID
-        );
       } else {
         // throw error
-        console.error("Bracket already exists");
-      }
-    },
-    async getCurrentBracketRound() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "brackets_test";
-      } else {
-        tableName = "brackets";
-      }
-
-      const { data, error } = await this.$supabase
-        .from(tableName)
-        .select("currentRound")
-        .eq("tourney_id", this.tourney.id);
-
-      if (!error && data.length > 0) {
-        return data[0].currentRound;
-      } else {
-        console.log(error);
-        return false;
+        this.$toast.show(
+          "Bracket wurde nicht erstellt, da bereits ein Bracket existiert.",
+          {
+            duration: 4000,
+            type: "error",
+            position: "top-right",
+          }
+        );
       }
     },
     async setRegisteredTourneyUsers() {
@@ -310,20 +340,6 @@ export default {
         // get all matches for each round
         for (const [i, round] of this.bracket.rounds.entries()) {
           this.bracket.rounds[i].matches = await this.getMatches(round.id);
-
-          // get all users for each match in the round
-          for (const [j, match] of this.bracket.rounds[i].matches.entries()) {
-            if (match.user_1_id) {
-              this.bracket.rounds[i].matches[j].user_1 = await this.getUser(
-                match.user_1_id
-              );
-            }
-            if (match.user_2_id) {
-              this.bracket.rounds[i].matches[j].user_2 = await this.getUser(
-                match.user_2_id
-              );
-            }
-          }
         }
         this.bracketLoading = false;
       }
@@ -332,9 +348,9 @@ export default {
       let tableName = "";
 
       if (this.testMode) {
-        tableName = "matches_test";
+        tableName = "matches_test_users";
       } else {
-        tableName = "matches";
+        tableName = "matches_users";
       }
       const { data, error } = await this.$supabase
         .from(tableName)
@@ -345,6 +361,8 @@ export default {
 
       if (!error) {
         return data;
+      } else {
+        console.log(error);
       }
     },
     async getUser(id) {
@@ -382,20 +400,13 @@ export default {
 
       let amountRounds = Math.log2(this.amountUsers);
 
-      console.log("generating rounds... amount of rounds: ", amountRounds);
-
       for (let i = 0; i < amountRounds; i++) {
         await this.createRoundInDB(amountRounds);
-        console.log("round ", i, " has been created");
       }
 
       const firstRoundID = await this.getFirstRoundID();
 
-      console.log("first round id: ", firstRoundID);
-
-      await setCurrentBracketRound(firstRoundID);
-
-      console.log("all rounds generated");
+      await this.setCurrentBracketRound(firstRoundID);
     },
     async createRoundInDB() {
       let tableName = "";
@@ -411,7 +422,6 @@ export default {
       ]);
     },
     async getRoundsFromDB() {
-      console.log("hey rounds from db call here");
       const { data, error } = await this.$supabase
         .from("rounds_test")
         .select("*")
@@ -419,30 +429,24 @@ export default {
         .order("id", { ascending: true });
 
       if (!error) {
-        console.log("hey my result for the rounds: ", data);
         return data;
       } else {
         console.log(error);
       }
     },
     async generateMatches() {
-      console.log("generating matches...");
-
       const data = await this.getRoundsFromDB();
-
-      console.log("rounds: ", data);
       // loop over rounds
       for (const [i, round] of data.entries()) {
-        console.log("generating matches for round ", i);
         if (i === 0) {
           let tempUserStack = this.tourneyUsers;
+
+          console.log(tempUserStack);
 
           for (let i = 0; i < this.amountUsers; i += 2) {
             if (tempUserStack.length >= 2) {
               let user1 = tempUserStack[0].profile_id;
               let user2 = tempUserStack[1].profile_id;
-
-              console.log("user1: ", user1, " user2: ", user2);
 
               tempUserStack.shift();
               tempUserStack.shift();
@@ -451,14 +455,11 @@ export default {
             }
           }
         } else {
-          console.log("generating placeholder matches");
-
           let tempAmountOfUsers = this.amountUsers / Math.pow(2, i + 1);
 
           for (let i = 0; i < tempAmountOfUsers; i++) {
             await this.createMatchInDB(null, null, round.id, i * 2);
           }
-          console.log("placeholder matches created for round ", i);
         }
       }
     },
@@ -485,6 +486,16 @@ export default {
         console.log(error);
       }
     },
+    onModalAccept(trigger) {
+      this.modal.isActive = false;
+      this[trigger]();
+    },
+    showModal(trigger, title, content) {
+      this.modal.isActive = true;
+      this.modal.trigger = trigger;
+      this.modal.title = title;
+      this.modal.content = content;
+    },
     async deleteBracket() {
       // delete matches from db
       let tableName = "";
@@ -495,14 +506,13 @@ export default {
         tableName = "matches";
       }
 
-      const { data, error } = await this.$supabase
+      const { data, matchesError } = await this.$supabase
         .from(tableName)
         .delete()
         .eq("bracket_id", this.bracketID);
 
-      if (!error) {
+      if (!matchesError) {
         // delete rounds from db
-
         let tableNameRounds = "";
 
         if (this.testMode) {
@@ -511,12 +521,12 @@ export default {
           tableNameRounds = "rounds";
         }
 
-        const { data, error } = await this.$supabase
+        const { data, roundsError } = await this.$supabase
           .from(tableNameRounds)
           .delete()
           .eq("bracket_id", this.bracketID);
 
-        if (!error) {
+        if (!roundsError) {
           // delete bracket from db
 
           let tableNameBrackets = "";
@@ -526,14 +536,26 @@ export default {
           } else {
             tableNameBrackets = "brackets";
           }
-          const { data, error } = await this.$supabase
+          const { data, bracketError } = await this.$supabase
             .from(tableNameBrackets)
             .delete()
             .eq("id", this.bracketID);
+
+          if (!bracketError) {
+            this.$toast.show("Bracket wurde gelöscht", {
+              duration: 4000,
+              type: "success",
+              position: "top-right",
+            });
+          } else {
+            this.$toast.show("Bracket konnte nicht gelöscht werden", {
+              duration: 4000,
+              type: "error",
+              position: "top-right",
+            });
+          }
         }
       }
-
-      console.log("bracket deleted");
 
       this.bracket = {};
     },
@@ -541,27 +563,34 @@ export default {
       this.$refs.bracket.$refs.bracketMatch.forEach((match) => {
         match.saveMatchScore();
       });
+
+      this.$toast.show("Die Resultate wurden gespeichert", {
+        duration: 4000,
+        type: "success",
+        position: "top-right",
+      });
     },
     async generateNextRound() {
-      const currentRoundID = await this.getCurrentBracketRound();
-      const nextRoundID = currentRoundID + 1;
-
-      console.log("current round: ", currentRoundID);
-      console.log("next round: ", nextRoundID);
+      this.$toast.show("Die nächste Runde wird generiert...", {
+        duration: 4000,
+        type: "success",
+        position: "top-right",
+        icon: {
+          name: "hourglass-half",
+        },
+      });
+      const nextRoundID = this.bracket.currentRound + 1;
 
       let lastRoundWinners = [];
 
-      // find roundID in this.bracket.rounds that has id = currentRoundID
+      // find roundID in this.bracket.rounds that has id = this.bracket.currentRound
       const currentRound = this.bracket.rounds.find(
-        (round) => round.id === currentRoundID
+        (round) => round.id === this.bracket.currentRound
       );
 
-      console.log("current round: ", currentRound);
-
       // iterate over matches in current round
-      for (const [i, match] of currentRound.matches.entries()) {
-        console.log("match: ", match);
-        let winner_id = match.winner_id;
+      for (const match of currentRound.matches.entries()) {
+        let winner_id = match[1].winner_id;
 
         // get user
         const user = await this.getUser(winner_id);
@@ -569,19 +598,13 @@ export default {
       }
 
       const nextRoundMatches = await this.$supabase
-        .from("matches_test")
+        .from("matches_test_users")
         .select("*")
         .eq("round_id", nextRoundID);
 
-      console.log("next round matches: ", nextRoundMatches);
-
       const amountOfNextRoundMatches = nextRoundMatches.data.length;
 
-      console.log(amountOfNextRoundMatches);
-
       let tempUserStack = lastRoundWinners;
-
-      console.log("tempUserStack: ", tempUserStack);
 
       for (let i = 0; i < amountOfNextRoundMatches * 2; i += 2) {
         if (tempUserStack.length >= 2) {
@@ -591,7 +614,7 @@ export default {
           tempUserStack.shift();
           tempUserStack.shift();
 
-          const { matchE, err } = await this.$supabase
+          await this.$supabase
             .from("matches_test")
             .update({
               user_1_id: user1,
@@ -604,18 +627,15 @@ export default {
 
       await this.setCurrentBracketRound(nextRoundID);
       await this.fillBracketObject();
+
+      this.$toast.show("Die nächste Runde wurde generiert.", {
+        duration: 4000,
+        type: "success",
+        position: "top-right",
+      });
     },
     async resetCurrentRound() {
-      const currentRoundID = await this.getCurrentBracketRound();
-
-      const previousRoundID = currentRoundID - 1;
-
-      console.log("current round: ", currentRoundID);
-
-      // find roundID in this.bracket.rounds that has id = currentRoundID
-      const currentRound = this.bracket.rounds.find(
-        (round) => round.id === currentRoundID
-      );
+      const previousRoundID = this.bracket.currentRound - 1;
 
       await this.$supabase
         .from("matches_test")
@@ -626,9 +646,17 @@ export default {
           user_2_score: null,
           winner_id: null,
         })
-        .match({ round_id: currentRoundID });
+        .match({ round_id: this.bracket.currentRound });
 
       await this.setCurrentBracketRound(previousRoundID);
+
+      await this.fillBracketObject();
+
+      this.$toast.show("Die Runde wurde gelöscht.", {
+        duration: 4000,
+        type: "success",
+        position: "top-right",
+      });
     },
   },
 };

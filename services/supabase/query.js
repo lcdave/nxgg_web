@@ -12,7 +12,5 @@ export async function getFieldFromTable(table, field, whereField, whereValue) {
     .eq(whereField, whereValue)
     .single();
 
-  console.log(data.data);
-
   return data.data;
 }

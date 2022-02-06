@@ -3,7 +3,7 @@
     <div class="match__content">
       <div class="match__user">
         <div class="match__user-name">
-          <span v-if="match.user_1">{{ match.user_1[0].username }}</span>
+          <span v-if="match.user1_username">{{ match.user1_username }}</span>
         </div>
         <div class="match__user-result" :class="{ 'is-winner': user1Winner }">
           <input type="number" v-model="user1Score" :readonly="isReadonly" />
@@ -11,7 +11,7 @@
       </div>
       <div class="match__user">
         <div class="match__user-name">
-          <span v-if="match.user_2">{{ match.user_2[0].username }}</span>
+          <span v-if="match.user2_username">{{ match.user2_username }}</span>
         </div>
         <div class="match__user-result" :class="{ 'is-winner': user2Winner }">
           <input type="number" v-model="user2Score" :readonly="isReadonly" />
@@ -24,12 +24,13 @@
 <script>
 import Vue from "vue";
 
-import * as QueryService from "@/services/supabase/query";
-
 export default Vue.extend({
   props: {
     match: {
       type: Object,
+    },
+    currentRound: {
+      type: Number,
     },
   },
   data() {
@@ -39,23 +40,15 @@ export default Vue.extend({
       user2Score: null,
       user2Winner: false,
       matchRound: null,
-      currentBracketRound: null,
       isReadonly: false,
     };
   },
   async created() {
-    if (this.match.user_1 && this.match.user_2) {
-      this.setMatchData();
+    if (this.match.user1_username && this.match.user2_username) {
+      await this.setMatchData();
     }
 
-    this.currentBracketRound = await QueryService.getFieldFromTable(
-      "brackets_test",
-      "currentRound",
-      "id",
-      this.match.bracket_id
-    );
-
-    if (this.currentBracketRound.currentRound === this.matchRound) {
+    if (this.currentRound === this.matchRound) {
       this.isReadonly = false;
     } else {
       this.isReadonly = true;
@@ -69,7 +62,6 @@ export default Vue.extend({
         .eq("id", this.match.id);
 
       if (!error && data.length > 0) {
-        console.log("debug data", data);
         this.user1Score = data[0].user_1_score;
         this.user2Score = data[0].user_2_score;
         this.matchRound = data[0].round_id;
@@ -83,17 +75,13 @@ export default Vue.extend({
       }
     },
     async saveMatchScore() {
-      if (this.match.user_1 && this.match.user_2) {
-        console.log(this.match);
+      if (this.match.user1_username && this.match.user2_username) {
         let winnerID = null;
 
-        console.log("score1: ", this.user1Score, " score2: ", this.user2Score);
-
-        if (this.user1Score > this.user2Score) {
-          console.log("user1 won: ", this.match.user_1[0].username);
-          winnerID = this.match.user_1[0].id;
+        if (parseInt(this.user1Score) > parseInt(this.user2Score)) {
+          winnerID = this.match.user_1_id;
         } else {
-          winnerID = this.match.user_2[0].id;
+          winnerID = this.match.user_2_id;
         }
 
         const { data, error } = await this.$supabase
@@ -105,10 +93,12 @@ export default Vue.extend({
           })
           .eq("id", this.match.id);
 
-        if (!error) {
-          console.log("Match saved");
-        } else {
-          console.log(error);
+        if (error) {
+          this.$toast.show("Match resultat konnte nicht gespeichert werden.", {
+            duration: 4000,
+            type: "error",
+            position: "top-right",
+          });
         }
       }
     },

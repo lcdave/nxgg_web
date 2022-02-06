@@ -101,7 +101,11 @@ export default {
       },
     ],
     ["@nuxtjs/axios"],
+    "@nuxtjs/toast",
   ],
+  toast: {
+    iconPack: "fontawesome",
+  },
   generate: {
     fallback: true,
   },
