@@ -1,46 +1,58 @@
 <template>
-  <div>
-    My Tourneys
-    <div class="datalist">
-      <div class="datalist__title"><h3>Turniere</h3></div>
-      <div class="datalist__content">
-        <div
-          class="datalist__item"
-          v-for="(tourney, index) in tourneys"
-          :key="index"
-        >
-          <div class="datalist__item-title">{{ tourney.tourney_title }}</div>
-          <div class="datalist__item-action">
-            <button @click="onRegisterClick(tourney.id)">Anmelden</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="my-tourneys">
+    <widget title="Turnier verwalten">
+      <template #content>
+        <tourneylist
+          :list="tourneys"
+          @register="onRegisterClick"
+          adminMode
+          variant="user"
+        />
+      </template>
+    </widget>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 
+import Tourneylist from "@/components/generic/tourneylist.vue";
+import Widget from "@/components/generic/widget.vue";
+
+import * as UserService from "@/services/supabase/user";
+
 export default Vue.extend({
-  name: "",
+  name: "myTourneys",
+  layout: "dashboard",
+  components: { Tourneylist, Widget },
+  middleware: ["auth", "admin"],
   data() {
     return {
-      user: null,
       tourneys: [],
+      user: null,
+      userProfile: null,
     };
   },
   async created() {
-    this.user = this.$supabase.auth.user();
-    this.getProfileTourneys();
+    let { data: tourneys, error } = await this.$supabase
+      .from("tourneys")
+      .select("*");
+
+    await UserService.getAuthUser().then((user) => {
+      this.user = user;
+    });
+
+    this.tourneys = tourneys;
+
+    await UserService.getProfile().then((profile) => {
+      this.userProfile = profile;
+    });
   },
   methods: {
-    async getProfileTourneys() {
+    async onRegisterClick(tourneyID) {
       const { data, error } = await this.$supabase
-        .from("profile_tourneys_view")
-        .select("tourney_title")
-        .eq("profile_id", this.user.id);
-      this.tourneys = data;
+        .from("profile_tourneys_nm")
+        .insert([{ profile_id: this.user.id, tourney_id: tourneyID }]);
     },
   },
 });

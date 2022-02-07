@@ -2,7 +2,11 @@
   <div class="overview">
     <widget title="Anstehende Turniere">
       <template #content>
-        <tourneylist :list="tourneys" @register="onRegisterClick" />
+        <tourneylist
+          :list="tourneys"
+          @register="onRegisterClick"
+          variant="global"
+        />
       </template>
     </widget>
   </div>

@@ -590,11 +590,7 @@ export default {
 
       // iterate over matches in current round
       for (const match of currentRound.matches.entries()) {
-        let winner_id = match[1].winner_id;
-
-        // get user
-        const user = await this.getUser(winner_id);
-        lastRoundWinners.push(user[0]);
+        lastRoundWinners.push(match[1].winner_id);
       }
 
       const nextRoundMatches = await this.$supabase
@@ -608,8 +604,8 @@ export default {
 
       for (let i = 0; i < amountOfNextRoundMatches * 2; i += 2) {
         if (tempUserStack.length >= 2) {
-          let user1 = tempUserStack[0].id;
-          let user2 = tempUserStack[1].id;
+          let user1 = tempUserStack[0];
+          let user2 = tempUserStack[1];
 
           tempUserStack.shift();
           tempUserStack.shift();

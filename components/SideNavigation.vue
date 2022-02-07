@@ -11,7 +11,7 @@
           </router-link>
         </li>
         <li @click="onLinkClick">
-          <router-link to="/user/dashboard/overview">
+          <router-link to="/user/dashboard/my-tourneys">
             <font-awesome-icon :icon="['fas', 'gamepad']" />
           </router-link>
         </li>

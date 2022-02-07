@@ -22,9 +22,23 @@
         <div class="tourneylist__col">{{ item.entry }} CHF</div>
         <div class="tourneylist__col">{{ item.amount_teams }} Teams</div>
         <div class="tourneylist__col tourneylist__action">
-          <button @click="triggerModal(item.id, item.title)" v-if="!adminMode">
-            Anmelden
-          </button>
+          <div class="user-actions" v-if="!adminMode">
+            <button
+              @click="triggerModal(item.id, item.title)"
+              v-if="!adminMode && variant == 'global'"
+            >
+              Anmelden
+            </button>
+            <nuxt-link
+              :to="`/user/dashboard/tourney/single/${item.id}`"
+              v-if="variant == 'user'"
+            >
+              <font-awesome-icon
+                :icon="['fas', 'trophy']"
+                class="admin-actions__admin"
+              />
+            </nuxt-link>
+          </div>
           <div class="admin-actions" v-if="adminMode">
             <font-awesome-icon
               :icon="['fas', 'pen']"
@@ -79,6 +93,9 @@ export default {
     },
     adminMode: {
       type: Boolean,
+    },
+    variant: {
+      type: String,
     },
   },
   data() {
