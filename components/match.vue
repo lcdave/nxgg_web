@@ -35,45 +35,25 @@ export default Vue.extend({
   },
   data() {
     return {
-      user1Score: null,
+      user1Score: this.match.user_1_score,
       user1Winner: false,
-      user2Score: null,
+      user2Score: this.match.user_2_score,
       user2Winner: false,
-      matchRound: null,
       isReadonly: false,
     };
   },
   async created() {
     if (this.match.user1_username && this.match.user2_username) {
-      await this.setMatchData();
+      this.setWinner();
     }
 
-    if (this.currentRound === this.matchRound) {
+    if (this.currentRound === this.match.round_id) {
       this.isReadonly = false;
     } else {
       this.isReadonly = true;
     }
   },
   methods: {
-    async setMatchData() {
-      const { data, error } = await this.$supabase
-        .from("matches_test")
-        .select("*")
-        .eq("id", this.match.id);
-
-      if (!error && data.length > 0) {
-        this.user1Score = data[0].user_1_score;
-        this.user2Score = data[0].user_2_score;
-        this.matchRound = data[0].round_id;
-        this.setWinner();
-      } else {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("No match found");
-        }
-      }
-    },
     async saveMatchScore() {
       if (this.match.user1_username && this.match.user2_username) {
         let winnerID = null;
@@ -103,8 +83,8 @@ export default Vue.extend({
       }
     },
     setWinner() {
-      if (this.user1Score && this.user2Score) {
-        if (this.user1Score > this.user2Score) {
+      if (this.match.user_1_score && this.match.user_2_score) {
+        if (this.match.user_1_score > this.match.user_2_score) {
           this.user1Winner = true;
           this.user2Winner = false;
         } else {
