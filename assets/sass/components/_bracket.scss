@@ -63,6 +63,11 @@
       background: #20242a;
       width: 100%;
       min-height: rem(45);
+
+      &.is-highlighted {
+        background: $yellow;
+        color: $black;
+      }
     }
 
     &-result {

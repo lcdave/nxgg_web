@@ -6,6 +6,8 @@
         :key="index"
         :match="match"
         :currentRound="data.currentRound"
+        :locked="locked"
+        :profileID="profileID"
         ref="bracketMatch"
       ></match>
     </div>
@@ -23,6 +25,13 @@ export default Vue.extend({
   props: {
     data: {
       type: Object,
+    },
+    locked: {
+      type: Boolean,
+      default: false,
+    },
+    profileID: {
+      type: String,
     },
   },
 });

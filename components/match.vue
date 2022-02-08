@@ -2,19 +2,47 @@
   <div class="match">
     <div class="match__content">
       <div class="match__user">
-        <div class="match__user-name">
+        <div
+          class="match__user-name"
+          :class="{
+            'is-highlighted': user1Highlighted,
+          }"
+        >
           <span v-if="match.user1_username">{{ match.user1_username }}</span>
         </div>
-        <div class="match__user-result" :class="{ 'is-winner': user1Winner }">
-          <input type="number" v-model="user1Score" :readonly="isReadonly" />
+        <div
+          class="match__user-result"
+          :class="{
+            'is-winner': user1Winner,
+          }"
+        >
+          <input
+            type="number"
+            v-model="user1Score"
+            :readonly="isReadonly || locked"
+          />
         </div>
       </div>
       <div class="match__user">
-        <div class="match__user-name">
+        <div
+          class="match__user-name"
+          :class="{
+            'is-highlighted': user2Highlighted,
+          }"
+        >
           <span v-if="match.user2_username">{{ match.user2_username }}</span>
         </div>
-        <div class="match__user-result" :class="{ 'is-winner': user2Winner }">
-          <input type="number" v-model="user2Score" :readonly="isReadonly" />
+        <div
+          class="match__user-result"
+          :class="{
+            'is-winner': user2Winner,
+          }"
+        >
+          <input
+            type="number"
+            v-model="user2Score"
+            :readonly="isReadonly || locked"
+          />
         </div>
       </div>
     </div>
@@ -32,13 +60,22 @@ export default Vue.extend({
     currentRound: {
       type: Number,
     },
+    locked: {
+      type: Boolean,
+      default: false,
+    },
+    profileID: {
+      type: String,
+    },
   },
   data() {
     return {
       user1Score: this.match.user_1_score,
       user1Winner: false,
+      user1Highlighted: false,
       user2Score: this.match.user_2_score,
       user2Winner: false,
+      user2Highlighted: false,
       isReadonly: false,
     };
   },
@@ -51,6 +88,10 @@ export default Vue.extend({
       this.isReadonly = false;
     } else {
       this.isReadonly = true;
+    }
+
+    if (this.profileID) {
+      this.highlightUser();
     }
   },
   methods: {
@@ -91,6 +132,13 @@ export default Vue.extend({
           this.user1Winner = false;
           this.user2Winner = true;
         }
+      }
+    },
+    highlightUser() {
+      if (this.match.user_1_id === this.profileID) {
+        this.user1Highlighted = true;
+      } else if (this.match.user_2_id === this.profileID) {
+        this.user2Highlighted = true;
       }
     },
   },

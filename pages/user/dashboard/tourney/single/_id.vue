@@ -1,7 +1,7 @@
 <template>
   <div class="tourney-admin-single">
     <div class="site-title">
-      <h2>Turnier Verwaltung</h2>
+      <h2>Turnier Übersicht</h2>
     </div>
     <widget small>
       <template #content>
@@ -42,7 +42,13 @@
     </widget>
     <widget v-if="!bracketLoading">
       <template #content>
-        <bracket :data="bracket" ref="bracket" />
+        <bracket
+          :data="bracket"
+          ref="bracket"
+          locked
+          highlightUser
+          :profileID="profileID"
+        />
       </template>
     </widget>
   </div>
@@ -53,9 +59,11 @@ import Widget from "@/components/generic/widget.vue";
 import Card from "@/components/generic/card.vue";
 import Bracket from "@/components/generic/bracket.vue";
 
+import * as UserService from "@/services/supabase/user";
+
 export default {
   layout: "dashboard",
-  components: { Widget, Card, Bracket, Modal },
+  components: { Widget, Card, Bracket },
   data() {
     return {
       tourney: {},
@@ -65,6 +73,7 @@ export default {
       bracketLoading: true,
       bracketID: null,
       testMode: true,
+      profileID: null,
     };
   },
   async created() {
@@ -82,6 +91,11 @@ export default {
     });
 
     await this.setRegisteredTourneyUsers();
+
+    await UserService.getProfile().then((profile) => {
+      console.log("debug profile", profile);
+      this.profileID = profile[0].id;
+    });
   },
   methods: {
     formatDate(date) {
@@ -113,6 +127,27 @@ export default {
         default:
           return "";
       }
+    },
+    async setRegisteredTourneyUsers() {
+      let tableName = "";
+
+      if (this.testMode) {
+        tableName = "profile_tourneys_nm_test";
+      } else {
+        tableName = "profile_tourneys_nm";
+      }
+      const { data, error } = await this.$supabase
+        .from(tableName)
+        .select("*")
+        .eq("tourney_id", this.tourney.id);
+
+      if (!error) {
+        this.tourneyUsers = data;
+        this.amountUsers = this.tourneyUsers.length;
+      }
+
+      //TODO: Error handling
+      console.log(error);
     },
     async setBracketBasicFields() {
       let tableName = "";

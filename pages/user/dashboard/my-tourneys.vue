@@ -1,13 +1,8 @@
 <template>
   <div class="my-tourneys">
-    <widget title="Turnier verwalten">
+    <widget title="Meine Turniere">
       <template #content>
-        <tourneylist
-          :list="tourneys"
-          @register="onRegisterClick"
-          adminMode
-          variant="user"
-        />
+        <tourneylist :list="tourneys" variant="user" />
       </template>
     </widget>
   </div>
@@ -34,13 +29,14 @@ export default Vue.extend({
     };
   },
   async created() {
-    let { data: tourneys, error } = await this.$supabase
-      .from("tourneys")
-      .select("*");
-
     await UserService.getAuthUser().then((user) => {
       this.user = user;
     });
+
+    let { data: tourneys, error } = await this.$supabase
+      .from("profile_tourneys_view")
+      .select("*")
+      .eq("profile_id", this.user.id);
 
     this.tourneys = tourneys;
 
@@ -48,12 +44,6 @@ export default Vue.extend({
       this.userProfile = profile;
     });
   },
-  methods: {
-    async onRegisterClick(tourneyID) {
-      const { data, error } = await this.$supabase
-        .from("profile_tourneys_nm")
-        .insert([{ profile_id: this.user.id, tourney_id: tourneyID }]);
-    },
-  },
+  methods: {},
 });
 </script>
