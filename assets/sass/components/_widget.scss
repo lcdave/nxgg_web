@@ -4,6 +4,8 @@
   }
 
   &__header {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: rem(20);
 
     h3 {

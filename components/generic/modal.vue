@@ -2,16 +2,16 @@
   <div class="modal" :class="{ 'is-active': isActive }">
     <div class="modal-background"></div>
     <div class="modal-content">
-      <div class="dialog">
+      <div class="dialog" :class="{ 'dialog--large': isLarge }">
         <div class="dialog__title">
           <h3>{{ title }}</h3>
         </div>
         <div class="dialog__content">
           <div class="dialog__content-text">
-            {{ content }}
+            <slot name="content" />
           </div>
           <div class="dialog__content-action">
-            <button @click="onAcceptClick(trigger)">Bestätigen</button>
+            <button @click="onAcceptClick()">Bestätigen</button>
             <button @click="resetModal()" class="cancel">Abbrechen</button>
           </div>
         </div>
@@ -32,11 +32,8 @@ export default Vue.extend({
     title: {
       type: String,
     },
-    content: {
-      type: String,
-    },
-    trigger: {
-      type: String,
+    isLarge: {
+      type: Boolean,
     },
   },
   data() {
@@ -44,10 +41,10 @@ export default Vue.extend({
   },
   methods: {
     onAcceptClick() {
-      this.$emit("accept", this.trigger);
+      this.$emit("accept");
     },
     resetModal() {
-      this.isActive = false;
+      this.$emit("cancel");
     },
   },
 });

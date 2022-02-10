@@ -20,6 +20,9 @@
             type="number"
             v-model="user1Score"
             :readonly="isReadonly || locked"
+            :class="{
+              'is-readonly': isReadonly || locked,
+            }"
           />
         </div>
       </div>

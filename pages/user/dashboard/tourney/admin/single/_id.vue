@@ -46,27 +46,6 @@
           <template #content>
             <card>
               <template #title>
-                <h3>Turnier</h3>
-              </template>
-              <template #content>
-                <div class="card__actions">
-                  <font-awesome-icon
-                    :icon="['fas', 'pen']"
-                    class="icon icon--blue"
-                  />
-                  <font-awesome-icon
-                    :icon="['fas', 'trash']"
-                    class="icon icon--red"
-                  />
-                </div>
-              </template>
-            </card>
-          </template>
-        </widget>
-        <widget>
-          <template #content>
-            <card>
-              <template #title>
                 <h3>Bracket</h3>
               </template>
               <template #content>
@@ -129,11 +108,12 @@
     </widget>
     <modal
       :title="modal.title"
-      :content="modal.content"
       :isActive="modal.isActive"
       :trigger="modal.trigger"
       @accept="onModalAccept"
-    />
+    >
+      <template #content>{{ modal.content }}</template>
+    </modal>
   </div>
 </template>
 

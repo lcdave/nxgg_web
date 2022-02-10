@@ -1,8 +1,23 @@
 <template>
   <div class="my-tourneys">
-    <widget title="Meine Turniere">
+    <widget title="Meine anstehenden Turniere">
       <template #content>
-        <tourneylist :list="tourneys" variant="user" />
+        <tourneylist
+          :list="tourneys"
+          variant="user"
+          dataFilter="future"
+          v-if="tourneys"
+        />
+      </template>
+    </widget>
+    <widget title="Meine abgeschlossene Turniere">
+      <template #content>
+        <tourneylist
+          :list="tourneys"
+          variant="user"
+          dataFilter="past"
+          v-if="tourneys"
+        />
       </template>
     </widget>
   </div>
