@@ -53,7 +53,7 @@
               <div class="control">
                 <div class="select">
                   <select v-model="createTourney.mode">
-                    <option value="">Select dropdown</option>
+                    <option value="">Bitte auswählen</option>
                     <option value="1">Solo</option>
                     <option value="2">Duo</option>
                     <option value="3">Trio</option>
@@ -68,7 +68,7 @@
               <div class="control">
                 <div class="select">
                   <select v-model="createTourney.platform">
-                    <option value="">Select dropdown</option>
+                    <option value="">Bitte auswählen</option>
                     <option value="1">Xbox</option>
                     <option value="2">Playstation</option>
                     <option value="3">PC</option>

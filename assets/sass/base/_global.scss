@@ -41,4 +41,8 @@ img {
 .select,
 select {
   width: 100%;
+
+  &:after {
+    border-color: $black !important;
+  }
 }
