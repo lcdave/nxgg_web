@@ -62,6 +62,11 @@
 
     a {
       color: $green;
+
+      &:hover {
+        color: $green;
+        text-decoration: underline;
+      }
     }
   }
 

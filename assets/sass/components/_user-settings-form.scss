@@ -1,0 +1,15 @@
+.user-settings-form {
+  max-width: rem(520);
+
+  .label {
+    color: $white;
+  }
+
+  .field {
+    margin-bottom: rem(20);
+  }
+
+  &__error {
+    color: $cinnabar;
+  }
+}

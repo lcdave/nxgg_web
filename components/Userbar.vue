@@ -1,6 +1,6 @@
 <template>
   <div class="userbar">
-    <div class="userbar__user__greeting">Good Evening Davide!</div>
+    <div class="userbar__user__greeting">Welcome, {{ profile.username }}!</div>
     <div class="userbar__user">
       <div class="dropdown" :class="{ 'is-active': dropdownActive }">
         <div class="dropdown-trigger" @click="onDropdownClick">
@@ -35,6 +35,8 @@
 import { ChevronDownIcon } from "@vue-hero-icons/outline";
 import Modal from "@/components/generic/modal.vue";
 
+import * as UserService from "@/services/supabase/user";
+
 export default {
   props: {
     user: {
@@ -55,7 +57,13 @@ export default {
           additionalParam: null,
         },
       },
+      profile: {
+        username: "",
+      },
     };
+  },
+  async created() {
+    this.profile = await UserService.getProfile();
   },
   methods: {
     onDropdownClick() {

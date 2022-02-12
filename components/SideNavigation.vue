@@ -21,7 +21,7 @@
           </router-link>
         </li>
         <li @click="onLinkClick">
-          <router-link to="/user/dashboard/overview">
+          <router-link to="/user/settings">
             <font-awesome-icon :icon="['fas', 'cog']" />
           </router-link>
         </li>

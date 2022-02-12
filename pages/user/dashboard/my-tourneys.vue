@@ -35,7 +35,7 @@ export default Vue.extend({
   name: "myTourneys",
   layout: "dashboard",
   components: { Tourneylist, Widget },
-  middleware: ["auth", "admin"],
+  middleware: ["auth"],
   data() {
     return {
       tourneys: [],

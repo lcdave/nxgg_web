@@ -64,6 +64,7 @@ import * as UserService from "@/services/supabase/user";
 export default {
   layout: "dashboard",
   components: { Widget, Card, Bracket },
+  middleware: ["auth"],
   data() {
     return {
       tourney: {},
@@ -84,6 +85,8 @@ export default {
 
     this.tourney = tourneys[0];
 
+    console.log("DATA", this.tourney);
+
     await this.setBracketBasicFields().then(() => {
       if (this.bracketID) {
         this.fillBracketObject();
@@ -94,7 +97,7 @@ export default {
 
     await UserService.getProfile().then((profile) => {
       console.log("debug profile", profile);
-      this.profileID = profile[0].id;
+      this.profileID = profile.id;
     });
   },
   methods: {

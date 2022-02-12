@@ -46,3 +46,8 @@ select {
     border-color: $black !important;
   }
 }
+
+.error {
+  color: $cinnabar;
+  margin-bottom: rem(10);
+}

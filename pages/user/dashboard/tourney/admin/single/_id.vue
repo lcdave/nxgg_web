@@ -138,6 +138,7 @@ import Spinner from "@/components/generic/spinner.vue";
 export default {
   layout: "dashboard",
   components: { Widget, Card, Bracket, Modal, Spinner },
+  middleware: ["auth", "admin"],
   data() {
     return {
       tourney: {},

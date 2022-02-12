@@ -49,10 +49,30 @@
             </div>
           </div>
           <div class="field">
+            <div class="control has-icons-left has-icons-right">
+              <input
+                class="input"
+                type="password"
+                v-model="passwordRepeat"
+                placeholder="Passwort wiederholen"
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </div>
+          </div>
+          <div class="field" v-if="errors">
+            <div class="control">
+              <div class="error" v-for="(error, index) in errors" :key="index">
+                {{ error }}
+              </div>
+            </div>
+          </div>
+          <div class="field">
             <div class="control">
               <p>
                 Account bereits vorhanden? Stattdessen
-                <nuxt-link to="/supabase/login">einloggen</nuxt-link>.
+                <nuxt-link to="/user/login">einloggen</nuxt-link>.
               </p>
             </div>
           </div>
@@ -70,6 +90,7 @@
 
 <script>
 import Vue from "vue";
+import * as UserService from "@/services/supabase/user";
 
 export default Vue.extend({
   name: "",
@@ -78,17 +99,54 @@ export default Vue.extend({
     return {
       email: "",
       password: "",
+      passwordRepeat: "",
       username: "",
+      errors: [],
     };
   },
   methods: {
     async signUp() {
-      const { user, session, error } = await this.$supabase.auth.signUp({
-        email: this.email,
-        password: this.password,
-        username: this.username,
-      });
-      console.log(user, error, session);
+      this.errors = [];
+
+      if (this.password !== this.passwordRepeat) {
+        this.errors.push("Passwörter stimmen nicht überein");
+      }
+
+      if (this.password.length < 8) {
+        this.errors.push("Passwort muss mindestens 8 Zeichen lang sein");
+      }
+      if (this.username.length < 3) {
+        this.errors.push("Benutzername muss mindestens 3 Zeichen lang sein");
+      }
+
+      if (await UserService.checkIfUsernameExists(this.username)) {
+        this.errors.push("Benutzername bereits vergeben");
+      }
+
+      if (this.errors.length == 0) {
+        const { user, session, error } = await this.$supabase.auth.signUp({
+          email: this.email,
+          password: this.password,
+          username: this.username,
+        });
+
+        console.log(user, session, error);
+
+        if (error) {
+          this.$toast.show("Fehler, bitte kontaktieren Sie den Administrator", {
+            duration: 4000,
+            type: "error",
+            position: "top-right",
+          });
+        } else {
+          this.$toast.show("Registrierung erfolgreich", {
+            duration: 4000,
+            type: "success",
+            position: "top-right",
+          });
+          this.$router.push("/user/login");
+        }
+      }
     },
   },
 });

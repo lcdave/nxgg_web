@@ -43,8 +43,7 @@
             <div class="control">
               <p>
                 Noch keinen Benutzer vorhanden?
-                <nuxt-link to="/supabase/registration"
-                  >Hier registrieren</nuxt-link
+                <nuxt-link to="/user/registration">Hier registrieren</nuxt-link
                 >.
               </p>
             </div>

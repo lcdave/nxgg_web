@@ -10,13 +10,38 @@ const user = supabase.auth.user();
 export async function getProfile() {
   const data = await supabase.from("profiles").select("*").eq("id", user.id);
 
-  return data.data;
+  return data.data[0];
+}
+
+export async function checkIfUsernameExists(username) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("username", username);
+
+  console.log(data);
+
+  if (data.length > 0 && !error) {
+    console.log("user exists");
+    return true;
+  } else if (data.length == 0 && !error) {
+    console.log("user does not exist");
+    return false;
+  }
+
+  if (error) {
+    this.$toast.show("Fehler, bitte kontaktieren Sie den Administrator", {
+      duration: 4000,
+      type: "error",
+      position: "top-right",
+    });
+
+    return false;
+  }
 }
 
 export async function getAuthUser() {
-  const ff = await supabase.auth.user();
-  console.log("service: ", ff);
-  return ff;
+  return user;
 }
 
 export async function checkIfAdminUser() {
