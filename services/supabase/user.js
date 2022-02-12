@@ -14,7 +14,9 @@ export async function getProfile() {
 }
 
 export async function getAuthUser() {
-  return user;
+  const ff = await supabase.auth.user();
+  console.log("service: ", ff);
+  return ff;
 }
 
 export async function checkIfAdminUser() {

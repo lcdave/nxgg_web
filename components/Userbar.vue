@@ -13,16 +13,27 @@
         <div class="dropdown-menu" id="dropdown-menu" role="menu">
           <div class="dropdown-content">
             <a href="#" class="dropdown-item"> Einstellungen </a>
-            <a href="#" class="dropdown-item"> Abmelden </a>
+            <a href="#" class="dropdown-item" @click="showModal('logout')">
+              Abmelden
+            </a>
           </div>
         </div>
       </div>
     </div>
+    <modal
+      :title="modals.logout.title"
+      :isActive="modals.logout.isActive"
+      @accept="logout"
+      @cancel="onLogoutCancel"
+    >
+      <template #content>Möchten Sie sich wirklich ausloggen?</template>
+    </modal>
   </div>
 </template>
 
 <script>
 import { ChevronDownIcon } from "@vue-hero-icons/outline";
+import Modal from "@/components/generic/modal.vue";
 
 export default {
   props: {
@@ -32,15 +43,38 @@ export default {
   },
   components: {
     ChevronDownIcon,
+    Modal,
   },
   data() {
     return {
       dropdownActive: false,
+      modals: {
+        logout: {
+          title: "Ausloggen",
+          isActive: false,
+          additionalParam: null,
+        },
+      },
     };
   },
   methods: {
     onDropdownClick() {
       this.dropdownActive = !this.dropdownActive;
+    },
+    logout() {
+      this.$supabase.auth.signOut();
+      this.$store.commit("auth/setUser", null);
+      this.$router.push("/user/login");
+    },
+    showModal(modal, additionalParam) {
+      this.modals[modal].isActive = true;
+
+      if (additionalParam) {
+        this.modals[modal].additionalParam = additionalParam;
+      }
+    },
+    onLogoutCancel() {
+      this.modals.logout.isActive = false;
     },
   },
 };

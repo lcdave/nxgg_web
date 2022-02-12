@@ -28,8 +28,19 @@
       </ul>
     </div>
     <div class="side-navigation__footer">
-      <font-awesome-icon :icon="['fas', 'power-off']" @click="logout()" />
+      <font-awesome-icon
+        :icon="['fas', 'power-off']"
+        @click="showModal('logout')"
+      />
     </div>
+    <modal
+      :title="modals.logout.title"
+      :isActive="modals.logout.isActive"
+      @accept="logout"
+      @cancel="onLogoutCancel"
+    >
+      <template #content>Möchten Sie sich wirklich ausloggen?</template>
+    </modal>
   </div>
 </template>
 
@@ -37,19 +48,28 @@
 import { HomeIcon } from "@vue-hero-icons/outline";
 
 import * as UserService from "@/services/supabase/user";
+import Modal from "@/components/generic/modal.vue";
 
 export default {
   components: {
     HomeIcon,
+    Modal,
   },
   data() {
     return {
       isAdmin: false,
+      modals: {
+        logout: {
+          title: "Ausloggen",
+          isActive: false,
+          additionalParam: null,
+        },
+      },
     };
   },
   async created() {
-    this.isAdmin = await UserService.checkIfAdminUser();
-    this.$nextTick(function () {
+    this.$nextTick(async function () {
+      this.isAdmin = await UserService.checkIfAdminUser();
       this.setActiveNavItemByCurrentRoute();
     });
   },
@@ -64,7 +84,7 @@ export default {
     logout() {
       this.$supabase.auth.signOut();
       this.$store.commit("auth/setUser", null);
-      this.$router.push("/auth");
+      this.$router.push("/user/login");
     },
     setActiveNavItemByCurrentRoute() {
       let navItems = document.querySelectorAll(".side-navigation__cta li");
@@ -80,6 +100,16 @@ export default {
           navItems[i].classList.add("active");
         }
       }
+    },
+    showModal(modal, additionalParam) {
+      this.modals[modal].isActive = true;
+
+      if (additionalParam) {
+        this.modals[modal].additionalParam = additionalParam;
+      }
+    },
+    onLogoutCancel() {
+      this.modals.logout.isActive = false;
     },
   },
 };

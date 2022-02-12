@@ -17,7 +17,6 @@
 <script>
 import Vue from "vue";
 
-import * as TourneyService from "@/services/tourneys/tourneys";
 import Tourneylist from "@/components/generic/tourneylist.vue";
 import Widget from "@/components/generic/widget.vue";
 
@@ -34,6 +33,8 @@ export default Vue.extend({
   },
   async created() {
     this.user = this.$supabase.auth.user();
+
+    console.log("user", this.user);
 
     let { data: tourneys, error } = await this.$supabase
       .from("tourneys")

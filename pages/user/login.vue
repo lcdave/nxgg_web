@@ -8,6 +8,10 @@
         <div class="login__title">
           <h2>Login</h2>
         </div>
+        <div class="login__error" v-if="formError">
+          Die Zugangsdaten sind nicht korrekt. Bitte versuchen Sie es erneut
+          oder setzen Sie ihr Passwort zurück.
+        </div>
         <form @submit.prevent="signIn">
           <div class="field">
             <div class="control has-icons-left has-icons-right">
@@ -66,6 +70,7 @@ export default {
     email: "",
     password: "",
     userProfile: null,
+    formError: null,
   }),
   async created() {
     this.profile = this.$supabase.auth.user();
@@ -73,6 +78,7 @@ export default {
     //TODO: Use middleware to make this redirect (avoids redirect delay)
     if (this.profile) {
       this.$router.push("/user/dashboard/overview");
+      F;
     }
 
     await this.getUserProfile();
@@ -85,17 +91,13 @@ export default {
         password: this.password,
       });
       await this.getUserProfile();
-      console.log("user profile: ", this.userProfile);
-
-      //const isAdmin = userProfile.isAdmin;
-
       if (!error) {
         this.profile = user;
         this.$store.commit("auth/setUser", user);
         //this.$store.commit("auth/setAdmin", isAdmin);
         this.$router.push("/user/dashboard/overview");
       } else {
-        console.log(error);
+        this.formError = true;
       }
     },
     async getUserProfile() {

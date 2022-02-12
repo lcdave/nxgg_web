@@ -41,12 +41,12 @@
 
     input {
       background-color: $codgray-light;
-      border: rem(1) solid $white;
+      border: rem(1) solid $dusty-gray;
       box-shadow: none;
-      color: $green;
+      color: $white;
 
       &:focus {
-        border-color: $green;
+        border-color: $white;
         box-shadow: none;
       }
     }
@@ -78,6 +78,12 @@
     h2 {
       margin-bottom: rem(20) !important;
     }
+  }
+
+  &__error {
+    color: $cinnabar;
+    font-size: rem(14);
+    margin-bottom: rem(20);
   }
 }
 

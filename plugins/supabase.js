@@ -6,6 +6,7 @@ const credentials = {
   url: "https://gmbuzdpradbrxaddglbn.supabase.co",
 };
 const supabase = createClient(credentials.url, credentials.anonPulic);
+
 export default (_, inject) => {
   inject("supabase", supabase);
 };
