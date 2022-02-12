@@ -57,13 +57,7 @@
                   />
                   <font-awesome-icon
                     :icon="['fas', 'trash']"
-                    @click="
-                      showModal(
-                        'deleteBracket',
-                        'Bestätigen',
-                        'Soll das Bracket wirklich gelöscht werden?'
-                      )
-                    "
+                    @click="showModal('delete')"
                     class="icon icon--red"
                   />
                 </div>
@@ -101,18 +95,18 @@
         </widget>
       </div>
     </div>
-    <widget v-if="!bracketLoading">
+    <widget v-if="!bracketLoading && Object.keys(this.bracket).length !== 0">
       <template #content>
         <bracket :data="bracket" ref="bracket" />
       </template>
     </widget>
     <modal
-      :title="modal.title"
-      :isActive="modal.isActive"
-      :trigger="modal.trigger"
-      @accept="onModalAccept"
+      :title="modals.delete.title"
+      :isActive="modals.delete.isActive"
+      @accept="onDeleteAccept"
+      @cancel="onDeleteCancel"
     >
-      <template #content>{{ modal.content }}</template>
+      <template #content>Soll das Bracket wirklich gelöscht werden?</template>
     </modal>
   </div>
 </template>
@@ -122,24 +116,26 @@ import Widget from "@/components/generic/widget.vue";
 import Card from "@/components/generic/card.vue";
 import Bracket from "@/components/generic/bracket.vue";
 import Modal from "@/components/generic/modal.vue";
+import Spinner from "@/components/generic/spinner.vue";
 
 export default {
   layout: "dashboard",
-  components: { Widget, Card, Bracket, Modal },
+  components: { Widget, Card, Bracket, Modal, Spinner },
   data() {
     return {
       tourney: {},
       tourneyUsers: [],
       amountUsers: "",
       bracket: {},
-      bracketLoading: true,
+      bracketLoading: false,
       bracketID: null,
       testMode: true,
-      modal: {
-        title: "",
-        content: "",
-        isActive: false,
-        trigger: "",
+      modals: {
+        delete: {
+          title: "Bracket löschen",
+          isActive: false,
+          additionalParam: null,
+        },
       },
       notification: {
         isVisible: false,
@@ -200,6 +196,8 @@ export default {
         .from("brackets_test")
         .update({ currentRound: currentRound })
         .eq("tourney_id", this.tourney.id);
+
+      this.bracket.currentRound = currentRound;
     },
     async setBracketBasicFields() {
       let tableName = "";
@@ -236,10 +234,14 @@ export default {
         },
       });
 
+      this.bracketLoading = true;
+
       await this.createBracketRecordInDB();
       await this.generateRounds();
       await this.generateMatches();
       await this.fillBracketObject();
+
+      this.bracketLoading = false;
 
       this.$toast.show("Bracket wurde erstellt", {
         duration: 4000,
@@ -301,6 +303,8 @@ export default {
       console.log(error);
     },
     async fillBracketObject() {
+      this.bracketLoading = true;
+
       let tableName = "";
 
       if (this.testMode) {
@@ -321,8 +325,9 @@ export default {
         for (const [i, round] of this.bracket.rounds.entries()) {
           this.bracket.rounds[i].matches = await this.getMatches(round.id);
         }
-        this.bracketLoading = false;
       }
+
+      this.bracketLoading = false;
     },
     async getMatches(round_id) {
       let tableName = "";
@@ -364,6 +369,7 @@ export default {
       }
     },
     async getFirstRoundID() {
+      console.log("getFirstRoundID, bracket id is: ", this.bracketID);
       const { data, error } = await this.$supabase
         .from("rounds_test")
         .select("id")
@@ -372,21 +378,35 @@ export default {
         .limit(1);
 
       if (!error) {
+        console.log(data);
         return data[0].id;
       }
     },
     async generateRounds() {
       this.amountUsers = this.tourneyUsers.length;
 
-      let amountRounds = Math.log2(this.amountUsers);
+      if (this.amountUsers > 0) {
+        let amountRounds = Math.log2(this.amountUsers);
 
-      for (let i = 0; i < amountRounds; i++) {
-        await this.createRoundInDB(amountRounds);
+        for (let i = 0; i < amountRounds; i++) {
+          await this.createRoundInDB(amountRounds);
+        }
+
+        const firstRoundID = await this.getFirstRoundID();
+
+        await this.setCurrentBracketRound(firstRoundID);
+      } else {
+        this.$toast.show(
+          "Bracket konnte nicht erstellt werden, weil sich keine Benutzer für das Turnier angemeldet haben",
+          {
+            duration: 4000,
+            type: "error",
+            position: "top-right",
+          }
+        );
+
+        return false;
       }
-
-      const firstRoundID = await this.getFirstRoundID();
-
-      await this.setCurrentBracketRound(firstRoundID);
     },
     async createRoundInDB() {
       let tableName = "";
@@ -466,15 +486,19 @@ export default {
         console.log(error);
       }
     },
-    onModalAccept(trigger) {
-      this.modal.isActive = false;
-      this[trigger]();
+    onDeleteAccept() {
+      this.modals.delete.isActive = false;
+      this.deleteBracket();
     },
-    showModal(trigger, title, content) {
-      this.modal.isActive = true;
-      this.modal.trigger = trigger;
-      this.modal.title = title;
-      this.modal.content = content;
+    onDeleteCancel() {
+      this.modals.delete.isActive = false;
+    },
+    showModal(modal, additionalParam) {
+      this.modals[modal].isActive = true;
+
+      if (additionalParam) {
+        this.modals[modal].additionalParam = additionalParam;
+      }
     },
     async deleteBracket() {
       // delete matches from db
@@ -520,6 +544,8 @@ export default {
             .from(tableNameBrackets)
             .delete()
             .eq("id", this.bracketID);
+
+          this.bracketID = null;
 
           if (!bracketError) {
             this.$toast.show("Bracket wurde gelöscht", {
@@ -568,47 +594,66 @@ export default {
         (round) => round.id === this.bracket.currentRound
       );
 
+      let allMatchesHaveResults = true;
+
       // iterate over matches in current round
       for (const match of currentRound.matches.entries()) {
-        lastRoundWinners.push(match[1].winner_id);
-      }
-
-      const nextRoundMatches = await this.$supabase
-        .from("matches_test_users")
-        .select("*")
-        .eq("round_id", nextRoundID);
-
-      const amountOfNextRoundMatches = nextRoundMatches.data.length;
-
-      let tempUserStack = lastRoundWinners;
-
-      for (let i = 0; i < amountOfNextRoundMatches * 2; i += 2) {
-        if (tempUserStack.length >= 2) {
-          let user1 = tempUserStack[0];
-          let user2 = tempUserStack[1];
-
-          tempUserStack.shift();
-          tempUserStack.shift();
-
-          await this.$supabase
-            .from("matches_test")
-            .update({
-              user_1_id: user1,
-              user_2_id: user2,
-              bracket_id: this.bracketID,
-            })
-            .match({ round_id: nextRoundID, match_sort: i });
+        console.log(match);
+        if (match[1].user_1_score === null || match[1].user_2_score === null) {
+          allMatchesHaveResults = false;
+          break;
+        } else {
+          lastRoundWinners.push(match[1].winner_id);
         }
       }
 
-      await this.setCurrentBracketRound(nextRoundID);
-      await this.fillBracketObject();
+      if (allMatchesHaveResults) {
+        const nextRoundMatches = await this.$supabase
+          .from("matches_test_users")
+          .select("*")
+          .eq("round_id", nextRoundID);
 
-      this.$toast.show("Die nächste Runde wurde generiert.", {
-        duration: 4000,
-        type: "success",
-        position: "top-right",
-      });
+        const amountOfNextRoundMatches = nextRoundMatches.data.length;
+
+        let tempUserStack = lastRoundWinners;
+
+        for (let i = 0; i < amountOfNextRoundMatches * 2; i += 2) {
+          if (tempUserStack.length >= 2) {
+            let user1 = tempUserStack[0];
+            let user2 = tempUserStack[1];
+
+            tempUserStack.shift();
+            tempUserStack.shift();
+
+            await this.$supabase
+              .from("matches_test")
+              .update({
+                user_1_id: user1,
+                user_2_id: user2,
+                bracket_id: this.bracketID,
+              })
+              .match({ round_id: nextRoundID, match_sort: i });
+          }
+        }
+
+        await this.setCurrentBracketRound(nextRoundID);
+        await this.fillBracketObject();
+
+        this.$toast.show("Die nächste Runde wurde generiert.", {
+          duration: 4000,
+          type: "success",
+          position: "top-right",
+        });
+      } else {
+        this.$toast.show(
+          "Nächste Runde wurde nicht generiert. Bitte tragen Sie zuerst alle Resultate der aktuellen Runde ein.",
+          {
+            duration: 4000,
+            type: "error",
+            position: "top-right",
+          }
+        );
+      }
     },
     async resetCurrentRound() {
       const previousRoundID = this.bracket.currentRound - 1;

@@ -1,0 +1,14 @@
+.spinner {
+  width: rem(300);
+  margin: 0 auto;
+  padding: rem(50);
+
+  .breeding-rhombus-spinner {
+    margin: 0 auto;
+  }
+
+  &__text {
+    margin-top: rem(40);
+    text-align: center;
+  }
+}

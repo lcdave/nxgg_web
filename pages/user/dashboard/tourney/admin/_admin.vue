@@ -2,7 +2,7 @@
   <div class="tourney-admin">
     <widget title="Turnier verwalten">
       <template #header-actions>
-        <button class="btn btn--primary" @click="showModal('create')">
+        <button class="button is-primary" @click="showModal('create')">
           Turnier erstellen
         </button>
       </template>
@@ -20,7 +20,7 @@
       :title="modals.create.title"
       :isActive="modals.create.isActive"
       @accept="onCreateAccept()"
-      @cancel="onModalCancel('delete')"
+      @cancel="onModalCancel('create')"
       isLarge
     >
       <template #content>
