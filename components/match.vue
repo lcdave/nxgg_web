@@ -104,25 +104,45 @@ export default Vue.extend({
 
         if (parseInt(this.user1Score) > parseInt(this.user2Score)) {
           winnerID = this.match.user_1_id;
-        } else {
+        } else if (parseInt(this.user1Score) < parseInt(this.user2Score)) {
           winnerID = this.match.user_2_id;
+        } else if (parseInt(this.user1Score) === parseInt(this.user2Score)) {
+          winnerID = null;
         }
 
-        const { data, error } = await this.$supabase
-          .from("matches_test")
-          .update({
-            user_1_score: parseInt(this.user1Score),
-            user_2_score: parseInt(this.user2Score),
-            winner_id: winnerID,
-          })
-          .eq("id", this.match.id);
+        if (winnerID) {
+          const { data, error } = await this.$supabase
+            .from("matches_test")
+            .update({
+              user_1_score: parseInt(this.user1Score),
+              user_2_score: parseInt(this.user2Score),
+              winner_id: winnerID,
+            })
+            .eq("id", this.match.id);
 
-        if (error) {
-          this.$toast.show("Match resultat konnte nicht gespeichert werden.", {
-            duration: 4000,
-            type: "error",
-            position: "top-right",
-          });
+          if (error) {
+            this.$toast.show(
+              "Match resultat konnte nicht gespeichert werden.",
+              {
+                duration: 4000,
+                type: "error",
+                position: "top-right",
+              }
+            );
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          this.$toast.show(
+            "Unentschieden sind nicht erlaubt, bitte korrigieren Sie die Resultate",
+            {
+              duration: 4000,
+              type: "error",
+              position: "top-right",
+            }
+          );
+          return false;
         }
       }
     },

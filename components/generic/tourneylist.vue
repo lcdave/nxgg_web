@@ -101,7 +101,7 @@
             <div class="field">
               <label class="label">Datum</label>
               <div class="control">
-                <input class="input" type="text" v-model="singleTourney.date" />
+                <input class="input" type="date" v-model="singleTourney.date" />
               </div>
             </div>
           </div>

@@ -57,7 +57,7 @@
                   />
                   <font-awesome-icon
                     :icon="['fas', 'trash']"
-                    @click="showModal('delete')"
+                    @click="showModal('deleteBracket')"
                     class="icon icon--red"
                   />
                 </div>
@@ -85,7 +85,7 @@
                   />
                   <font-awesome-icon
                     :icon="['fas', 'trash']"
-                    @click="resetCurrentRound()"
+                    @click="showModal('deleteRound')"
                     class="icon icon--red"
                   />
                 </div>
@@ -108,12 +108,22 @@
       </template>
     </widget>
     <modal
-      :title="modals.delete.title"
-      :isActive="modals.delete.isActive"
-      @accept="onDeleteAccept"
-      @cancel="onDeleteCancel"
+      :title="modals.deleteBracket.title"
+      :isActive="modals.deleteBracket.isActive"
+      @accept="onDeleteBracketAccept"
+      @cancel="onDeleteBracketCancel"
     >
       <template #content>Soll das Bracket wirklich gelöscht werden?</template>
+    </modal>
+    <modal
+      :title="modals.deleteRound.title"
+      :isActive="modals.deleteRound.isActive"
+      @accept="onDeleteRoundAccept"
+      @cancel="onDeleteRoundCancel"
+    >
+      <template #content
+        >Soll die aktuelle Runde wirklich gelöscht werden?</template
+      >
     </modal>
   </div>
 </template>
@@ -138,8 +148,13 @@ export default {
       bracketID: null,
       testMode: true,
       modals: {
-        delete: {
+        deleteBracket: {
           title: "Bracket löschen",
+          isActive: false,
+          additionalParam: null,
+        },
+        deleteRound: {
+          title: "Aktuelle Runde löschen",
           isActive: false,
           additionalParam: null,
         },
@@ -493,12 +508,19 @@ export default {
         console.log(error);
       }
     },
-    onDeleteAccept() {
-      this.modals.delete.isActive = false;
+    onDeleteRoundAccept() {
+      this.modals.deleteRound.isActive = false;
+      this.resetCurrentRound();
+    },
+    onDeleteRoundCancel() {
+      this.modals.deleteRound.isActive = false;
+    },
+    onDeleteBracketAccept() {
+      this.modals.deleteBracket.isActive = false;
       this.deleteBracket();
     },
-    onDeleteCancel() {
-      this.modals.delete.isActive = false;
+    onDeleteBracketCancel() {
+      this.modals.deleteBracket.isActive = false;
     },
     showModal(modal, additionalParam) {
       this.modals[modal].isActive = true;
@@ -572,26 +594,26 @@ export default {
 
       this.bracket = {};
     },
-    saveResults() {
+    async saveResults() {
+      let hasError = false;
+
       this.$refs.bracket.$refs.bracketMatch.forEach((match) => {
-        match.saveMatchScore();
+        if (!match.saveMatchScore()) {
+          hasError = true;
+        }
       });
 
-      this.$toast.show("Die Resultate wurden gespeichert", {
-        duration: 4000,
-        type: "success",
-        position: "top-right",
-      });
+      if (!hasError) {
+        await this.fillBracketObject();
+
+        this.$toast.show("Die Resultate wurden gespeichert", {
+          duration: 4000,
+          type: "success",
+          position: "top-right",
+        });
+      }
     },
     async generateNextRound() {
-      this.$toast.show("Die nächste Runde wird generiert...", {
-        duration: 4000,
-        type: "success",
-        position: "top-right",
-        icon: {
-          name: "hourglass-half",
-        },
-      });
       const nextRoundID = this.bracket.currentRound + 1;
 
       let lastRoundWinners = [];
@@ -605,7 +627,6 @@ export default {
 
       // iterate over matches in current round
       for (const match of currentRound.matches.entries()) {
-        console.log(match);
         if (match[1].user_1_score === null || match[1].user_2_score === null) {
           allMatchesHaveResults = false;
           break;
@@ -615,6 +636,14 @@ export default {
       }
 
       if (allMatchesHaveResults) {
+        this.$toast.show("Die nächste Runde wird generiert...", {
+          duration: 4000,
+          type: "success",
+          position: "top-right",
+          icon: {
+            name: "hourglass-half",
+          },
+        });
         const nextRoundMatches = await this.$supabase
           .from("matches_test_users")
           .select("*")
@@ -653,7 +682,7 @@ export default {
         });
       } else {
         this.$toast.show(
-          "Nächste Runde wurde nicht generiert. Bitte tragen Sie zuerst alle Resultate der aktuellen Runde ein.",
+          "Nächste Runde wurde nicht generiert. Bitte erfassen / speichern Sie zuerst alle Resultate der aktuellen Runde.",
           {
             duration: 4000,
             type: "error",
