@@ -5,7 +5,7 @@
     </div>
     <div class="side-navigation__cta">
       <ul>
-        <li class="active" @click="onLinkClick">
+        <li @click="onLinkClick">
           <router-link to="/user/dashboard/overview">
             <HomeIcon size="1.5x" />
           </router-link>
@@ -49,11 +49,14 @@ export default {
   },
   async created() {
     this.isAdmin = await UserService.checkIfAdminUser();
+    this.$nextTick(function () {
+      this.setActiveNavItemByCurrentRoute();
+    });
   },
   methods: {
     onLinkClick(e) {
       var navItems = document.querySelectorAll(".side-navigation__cta li");
-      for (var i = 0; i < navItems.length; i++) {
+      for (let i = 0; i < navItems.length; i++) {
         navItems[i].classList.remove("active");
       }
       e.currentTarget.classList.toggle("active");
@@ -62,6 +65,21 @@ export default {
       this.$supabase.auth.signOut();
       this.$store.commit("auth/setUser", null);
       this.$router.push("/auth");
+    },
+    setActiveNavItemByCurrentRoute() {
+      let navItems = document.querySelectorAll(".side-navigation__cta li");
+
+      for (let i = 0; i < navItems.length; i++) {
+        navItems[i].classList.remove("active");
+      }
+
+      for (let i = 0; i < navItems.length; i++) {
+        if (
+          navItems[i].querySelector("a").classList.contains("nuxt-link-active")
+        ) {
+          navItems[i].classList.add("active");
+        }
+      }
     },
   },
 };
