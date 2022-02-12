@@ -32,6 +32,7 @@
     "buefy": "^0.9.10",
     "cookie-universal-nuxt": "^2.1.5",
     "cookies": "^0.8.0",
+    "epic-spinners": "^1.1.0",
     "js-cookie": "^3.0.1",
     "nuxt": "^2.15.8",
     "nuxt-buefy": "^0.4.10",

@@ -15,7 +15,11 @@
 import Vue from "vue";
 
 // https://epic-spinners.epicmax.co/get-started
-import { BreedingRhombusSpinner } from "epic-spinners";
+let BreedingRhombusSpinner = null;
+
+if (process.client) {
+  BreedingRhombusSpinner = require("epic-spinners").BreedingRhombusSpinner;
+}
 
 export default Vue.extend({
   name: "Spinner",

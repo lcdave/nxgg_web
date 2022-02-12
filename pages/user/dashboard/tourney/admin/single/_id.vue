@@ -100,6 +100,13 @@
         <bracket :data="bracket" ref="bracket" />
       </template>
     </widget>
+    <widget v-if="bracketLoading">
+      <template #content>
+        <spinner>
+          <template #text> Bracket wird geladen... </template>
+        </spinner>
+      </template>
+    </widget>
     <modal
       :title="modals.delete.title"
       :isActive="modals.delete.isActive"
