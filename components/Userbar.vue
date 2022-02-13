@@ -12,7 +12,9 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu" role="menu">
           <div class="dropdown-content">
-            <a href="#" class="dropdown-item"> Einstellungen </a>
+            <nuxt-link to="/user/settings" class="dropdown-item"
+              >Einstellungen</nuxt-link
+            >
             <a href="#" class="dropdown-item" @click="showModal('logout')">
               Abmelden
             </a>

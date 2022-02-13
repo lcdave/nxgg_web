@@ -19,13 +19,32 @@ export async function checkIfUsernameExists(username) {
     .select("*")
     .eq("username", username);
 
-  console.log(data);
-
   if (data.length > 0 && !error) {
-    console.log("user exists");
     return true;
   } else if (data.length == 0 && !error) {
-    console.log("user does not exist");
+    return false;
+  }
+
+  if (error) {
+    this.$toast.show("Fehler, bitte kontaktieren Sie den Administrator", {
+      duration: 4000,
+      type: "error",
+      position: "top-right",
+    });
+
+    return false;
+  }
+}
+
+export async function checkIfEmailExists(email) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("email", email);
+
+  if (data.length > 0 && !error) {
+    return true;
+  } else if (data.length == 0 && !error) {
     return false;
   }
 

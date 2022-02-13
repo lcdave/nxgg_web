@@ -32,18 +32,14 @@ export default Vue.extend({
     };
   },
   async created() {
+    this.$forceUpdate();
     this.user = this.$supabase.auth.user();
-
-    console.log("user", this.user);
 
     let { data: tourneys, error } = await this.$supabase
       .from("tourneys")
       .select("*");
 
     this.tourneys = tourneys;
-
-    console.log(error);
-    console.log(tourneys);
   },
   methods: {
     async onRegisterClick(tourneyID) {

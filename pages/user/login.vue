@@ -77,7 +77,6 @@ export default {
     //TODO: Use middleware to make this redirect (avoids redirect delay)
     if (this.profile) {
       this.$router.push("/user/dashboard/overview");
-      F;
     }
 
     await this.getUserProfile();

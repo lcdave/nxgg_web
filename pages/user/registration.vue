@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login">
-      <div class="login__form">
+      <div class="login__form" v-if="!isLoading">
         <div class="login__logo">
           <img src="@/assets/theme/logo.svg" alt="NXGG Logo" />
         </div>
@@ -83,6 +83,11 @@
           </div>
         </form>
       </div>
+      <div class="login__form" v-if="isLoading">
+        <spinner>
+          <template #text> Benutzer wird registriert... </template>
+        </spinner>
+      </div>
       <div class="login__image"></div>
     </div>
   </div>
@@ -92,9 +97,14 @@
 import Vue from "vue";
 import * as UserService from "@/services/supabase/user";
 
+import Spinner from "@/components/generic/spinner.vue";
+
 export default Vue.extend({
-  name: "",
+  name: "Registration",
   layout: "login",
+  components: {
+    Spinner,
+  },
   data() {
     return {
       email: "",
@@ -102,11 +112,13 @@ export default Vue.extend({
       passwordRepeat: "",
       username: "",
       errors: [],
+      isLoading: false,
     };
   },
   methods: {
     async signUp() {
       this.errors = [];
+      this.isLoading = true;
 
       if (this.password !== this.passwordRepeat) {
         this.errors.push("Passwörter stimmen nicht überein");
@@ -123,14 +135,28 @@ export default Vue.extend({
         this.errors.push("Benutzername bereits vergeben");
       }
 
-      if (this.errors.length == 0) {
-        const { user, session, error } = await this.$supabase.auth.signUp({
-          email: this.email,
-          password: this.password,
-          username: this.username,
-        });
+      if (await UserService.checkIfEmailExists(this.email)) {
+        this.errors.push("Email Adresse wird bereits verwendet");
+      }
 
-        console.log(user, session, error);
+      this.isLoading = false;
+
+      if (this.errors.length == 0) {
+        this.isLoading = true;
+        const { user, session, error } = await this.$supabase.auth.signUp(
+          {
+            email: this.email,
+            password: this.password,
+          },
+          {
+            data: {
+              user_name: this.username,
+              email: this.email,
+            },
+          }
+        );
+
+        this.isLoading = false;
 
         if (error) {
           this.$toast.show("Fehler, bitte kontaktieren Sie den Administrator", {
