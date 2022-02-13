@@ -7,6 +7,7 @@
           variant="user"
           dataFilter="future"
           v-if="tourneys"
+          :user="user"
         />
       </template>
     </widget>
@@ -17,6 +18,7 @@
           variant="user"
           dataFilter="past"
           v-if="tourneys"
+          :user="user"
         />
       </template>
     </widget>
