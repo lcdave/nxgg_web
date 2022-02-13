@@ -33,8 +33,12 @@
               <div class="card__value">{{ tourney.entry }}</div>
             </div>
             <div class="card__row">
-              <div class="card__key">Anz. Teams</div>
+              <div class="card__key">Max. Teams</div>
               <div class="card__value">{{ tourney.amount_teams }}</div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Anmeldungen</div>
+              <div class="card__value">{{ tourney.registrations }}</div>
             </div>
           </template>
         </card>

@@ -5,6 +5,8 @@
         <tourneylist
           :list="tourneys"
           @register="onRegisterClick"
+          @unsubscribe="onUnsubscribeClick"
+          @isUserRegistered="isUserRegistered"
           variant="global"
           dataFilter="future"
           v-if="tourneys"
@@ -51,11 +53,12 @@ export default Vue.extend({
         .eq("tourney_id", tourneyID);
 
       if (data.length === 0) {
-        const { data, error } = await this.$supabase
+        const { data, error2 } = await this.$supabase
           .from("profile_tourneys_nm")
           .insert([{ profile_id: this.user.id, tourney_id: tourneyID }]);
 
-        if (error) {
+        await this.updateRegistrationsCounter("+", tourneyID);
+        if (error || error2) {
           this.$toast.show(
             "Anmeldung konnte nicht registriert werden. Bitte kontaktieren Sie den Administrator",
             {
@@ -77,6 +80,64 @@ export default Vue.extend({
           type: "info",
           position: "top-right",
         });
+      }
+    },
+    async updateRegistrationsCounter(operator, tourneyID) {
+      const { data: registrations, error } = await this.$supabase
+        .from("tourneys")
+        .select("registrations")
+        .eq("id", tourneyID);
+
+      if (operator === "+") {
+        const { data: updated, error2 } = await this.$supabase
+          .from("tourneys")
+          .update({ registrations: registrations[0].registrations + 1 })
+          .eq("id", tourneyID);
+      } else {
+        const { data: updated, error2 } = await this.$supabase
+          .from("tourneys")
+          .update({ registrations: registrations[0].registrations - 1 })
+          .eq("id", tourneyID);
+      }
+    },
+    async onUnsubscribeClick(tourneyID) {
+      const { data, error } = await this.$supabase
+        .from("profile_tourneys_nm")
+        .delete()
+        .eq("profile_id", this.user.id)
+        .eq("tourney_id", tourneyID);
+
+      await this.updateRegistrationsCounter("-", tourneyID);
+
+      if (error) {
+        this.$toast.show(
+          "Anmeldung konnte nicht gelöscht werden. Bitte kontaktieren Sie den Administrator",
+          {
+            duration: 4000,
+            type: "error",
+            position: "top-right",
+          }
+        );
+      } else {
+        this.$toast.show("Anmeldung erfolgreich gelöscht", {
+          duration: 4000,
+          type: "success",
+          position: "top-right",
+        });
+      }
+    },
+    async isUserRegistered(tourneyID) {
+      const { data, error } = await this.$supabase
+        .from("profile_tourneys_nm")
+        .select("*")
+        .eq("profile_id", this.user.id)
+        .eq("tourney_id", tourneyID);
+
+      if (data.length === 0) {
+        return false;
+      } else {
+        console.log(tourneyID);
+        return true;
       }
     },
   },

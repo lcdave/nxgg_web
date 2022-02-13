@@ -8,7 +8,8 @@
         <div class="tourneylist__col">Plattform</div>
         <div class="tourneylist__col">Preis</div>
         <div class="tourneylist__col">Eintrittspreis</div>
-        <div class="tourneylist__col">Anz. Teams</div>
+        <div class="tourneylist__col">Max. Teams</div>
+        <div class="tourneylist__col">Freie Plätze</div>
         <div class="tourneylist__col"></div>
       </div>
       <div
@@ -24,15 +25,41 @@
         <div class="tourneylist__col">{{ getPlatform(item.platform) }}</div>
         <div class="tourneylist__col">{{ item.price }} CHF</div>
         <div class="tourneylist__col">{{ item.entry }} CHF</div>
-        <div class="tourneylist__col">{{ item.amount_teams }} Teams</div>
+        <div class="tourneylist__col">{{ item.amount_teams }}</div>
+        <div class="tourneylist__col">
+          {{ getAmountFreeSlots(item.amount_teams, item.registrations) }}
+        </div>
         <div class="tourneylist__col tourneylist__action">
           <div class="user-actions" v-if="!adminMode">
             <button
               @click="showModal('register', item.id)"
-              v-if="!adminMode && variant == 'global'"
+              v-if="
+                !adminMode &&
+                variant == 'global' &&
+                !isUserRegistered(item.id) &&
+                getAmountFreeSlots(item.amount_teams, item.registrations) > 0
+              "
             >
               Anmelden
             </button>
+            <button
+              @click="showModal('unsubscribe', item.id)"
+              v-if="
+                !adminMode && variant == 'global' && isUserRegistered(item.id)
+              "
+            >
+              Abmelden
+            </button>
+            <span
+              v-if="
+                !adminMode &&
+                variant == 'global' &&
+                getAmountFreeSlots(item.amount_teams, item.registrations) ==
+                  0 &&
+                !isUserRegistered(item.id)
+              "
+              >Ausgebucht</span
+            >
             <nuxt-link
               :to="`/user/dashboard/tourney/single/${item.id}`"
               v-if="variant == 'user'"
@@ -73,6 +100,18 @@
       <template #content>
         <p>
           Bist du dir sicher, dass du dich für das Turnier anmelden möchtest?
+        </p>
+      </template>
+    </modal>
+    <modal
+      :title="modals.unsubscribe.title"
+      :isActive="modals.unsubscribe.isActive"
+      @accept="onUnsubscribeAccept()"
+      @cancel="onModalCancel('unsubscribe')"
+    >
+      <template #content>
+        <p>
+          Bist du dir sicher, dass du dich für das Turnier abmelden möchtest?
         </p>
       </template>
     </modal>
@@ -244,6 +283,11 @@ export default {
           isActive: false,
           additionalParam: null,
         },
+        unsubscribe: {
+          title: "Turnier Abmeldung",
+          isActive: false,
+          additionalParam: null,
+        },
       },
     };
   },
@@ -253,6 +297,7 @@ export default {
     } else {
       this.tourneys = this.list;
     }
+    //console.log("test", this.isUserRegistered(4));
   },
   watch: {
     list: function () {
@@ -297,6 +342,10 @@ export default {
     async onRegisterAccept() {
       this.$emit("register", this.modals.register.additionalParam);
       this.modals.register.isActive = false;
+    },
+    async onUnsubscribeAccept() {
+      this.$emit("unsubscribe", this.modals.unsubscribe.additionalParam);
+      this.modals.unsubscribe.isActive = false;
     },
     onModalCancel(modal) {
       this.modals[modal].isActive = false;
@@ -409,6 +458,12 @@ export default {
           position: "top-right",
         });
       }
+    },
+    getAmountFreeSlots(max, current) {
+      return parseInt(max) - parseInt(current);
+    },
+    isUserRegistered(tourneyID) {
+      this.$emit("isUserRegistered", tourneyID);
     },
   },
 };

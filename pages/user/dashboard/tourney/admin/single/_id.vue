@@ -33,14 +33,24 @@
               <div class="card__value">{{ tourney.entry }}</div>
             </div>
             <div class="card__row">
-              <div class="card__key">Anz. Teams</div>
+              <div class="card__key">Max. Teams</div>
               <div class="card__value">{{ tourney.amount_teams }}</div>
+            </div>
+            <div class="card__row">
+              <div class="card__key">Anmeldungen</div>
+              <div class="card__value">{{ tourney.registrations }}</div>
             </div>
           </template>
         </card>
       </template>
     </widget>
-    <div class="widget-container">
+    <widget v-if="!tourneyRequirementsReached" title="Bracket Verwaltung">
+      <template #content>
+        Es sind leider noch nicht genügend Turnier-Anmeldungen eingegangen, um
+        das Turnier zu starten.
+      </template>
+    </widget>
+    <div class="widget-container" v-if="tourneyRequirementsReached">
       <div class="widget-container__row">
         <widget>
           <template #content>
@@ -148,6 +158,7 @@ export default {
       bracketLoading: false,
       bracketID: null,
       testMode: true,
+      tourneyRequirementsReached: false,
       modals: {
         deleteBracket: {
           title: "Bracket löschen",
@@ -182,6 +193,8 @@ export default {
     });
 
     await this.setRegisteredTourneyUsers();
+
+    this.setTourneyRequirementsReached();
   },
   methods: {
     formatDate(date) {
@@ -715,6 +728,13 @@ export default {
         type: "success",
         position: "top-right",
       });
+    },
+    setTourneyRequirementsReached() {
+      if (this.tourney.amount_teams === this.tourney.registrations) {
+        this.tourneyRequirementsReached = true;
+      } else {
+        this.tourneyRequirementsReached = false;
+      }
     },
   },
 };
