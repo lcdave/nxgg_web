@@ -6,10 +6,10 @@
           :list="tourneys"
           @register="onRegisterClick"
           @unsubscribe="onUnsubscribeClick"
-          @isUserRegistered="isUserRegistered"
           variant="global"
           dataFilter="future"
           v-if="tourneys"
+          :user="user"
         />
       </template>
     </widget>
@@ -124,20 +124,6 @@ export default Vue.extend({
           type: "success",
           position: "top-right",
         });
-      }
-    },
-    async isUserRegistered(tourneyID) {
-      const { data, error } = await this.$supabase
-        .from("profile_tourneys_nm")
-        .select("*")
-        .eq("profile_id", this.user.id)
-        .eq("tourney_id", tourneyID);
-
-      if (data.length === 0) {
-        return false;
-      } else {
-        console.log(tourneyID);
-        return true;
       }
     },
   },

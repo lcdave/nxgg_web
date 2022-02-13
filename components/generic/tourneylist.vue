@@ -31,35 +31,13 @@
         </div>
         <div class="tourneylist__col tourneylist__action">
           <div class="user-actions" v-if="!adminMode">
-            <button
-              @click="showModal('register', item.id)"
-              v-if="
-                !adminMode &&
-                variant == 'global' &&
-                !isUserRegistered(item.id) &&
-                getAmountFreeSlots(item.amount_teams, item.registrations) > 0
-              "
-            >
-              Anmelden
-            </button>
-            <button
-              @click="showModal('unsubscribe', item.id)"
-              v-if="
-                !adminMode && variant == 'global' && isUserRegistered(item.id)
-              "
-            >
-              Abmelden
-            </button>
-            <span
-              v-if="
-                !adminMode &&
-                variant == 'global' &&
-                getAmountFreeSlots(item.amount_teams, item.registrations) ==
-                  0 &&
-                !isUserRegistered(item.id)
-              "
-              >Ausgebucht</span
-            >
+            <tourney-subscribe-button
+              :item="item"
+              :variant="variant"
+              :adminMode="adminMode"
+              :userID="user.id"
+              @showModal="showModal"
+            />
             <nuxt-link
               :to="`/user/dashboard/tourney/single/${item.id}`"
               v-if="variant == 'user'"
@@ -233,9 +211,10 @@
 
 <script>
 import Modal from "@/components/generic/modal.vue";
+import TourneySubscribeButton from "@/components/generic/tourneySubscribeButton.vue";
 
 export default {
-  name: "",
+  name: "TourneyList",
   props: {
     list: {
       type: Array,
@@ -249,9 +228,13 @@ export default {
     dataFilter: {
       type: String,
     },
+    user: {
+      type: Object,
+    },
   },
   components: {
     Modal,
+    TourneySubscribeButton,
   },
   data() {
     return {
@@ -291,13 +274,12 @@ export default {
       },
     };
   },
-  created() {
+  async created() {
     if (this.dataFilter) {
       this.setTourneysByFilter();
     } else {
       this.tourneys = this.list;
     }
-    //console.log("test", this.isUserRegistered(4));
   },
   watch: {
     list: function () {
@@ -461,9 +443,6 @@ export default {
     },
     getAmountFreeSlots(max, current) {
       return parseInt(max) - parseInt(current);
-    },
-    isUserRegistered(tourneyID) {
-      this.$emit("isUserRegistered", tourneyID);
     },
   },
 };
