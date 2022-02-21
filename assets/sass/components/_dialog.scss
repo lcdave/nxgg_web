@@ -30,17 +30,27 @@
       button {
         background: $green;
         border: none;
-        padding: rem(4) rem(15);
+        padding: rem(10) rem(20);
         border-radius: rem(20);
         color: $mine-shaft;
         outline: none;
         display: inline-block;
         cursor: pointer;
 
+        &:hover {
+          background: $green-dark;
+          color: $white;
+        }
+
         &.cancel {
           background: $gull-gray;
           color: $white;
           margin-left: rem(5);
+
+          &:hover {
+            background: $geyser;
+            color: $black;
+          }
         }
       }
     }

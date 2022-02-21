@@ -9,6 +9,7 @@ import PostList from "@/components/generic/postList.vue";
 export default Vue.extend({
   name: "EventsList",
   components: { PostList },
+  layout: "detail",
   async asyncData({ $prismic, error }) {
     try {
       const events = await $prismic.api.query(

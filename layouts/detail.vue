@@ -1,12 +1,12 @@
 <template>
-  <div class="website">
+  <div class="detail">
     <topbar />
     <Nuxt />
     <footer-content />
   </div>
 </template>
 
-<style lang="scss" src="@/assets/sass/layout/_website.scss"></style>
+<style lang="scss" src="@/assets/sass/layout/_detail.scss"></style>
 
 <script>
 import Topbar from "@/components/Topbar.vue";

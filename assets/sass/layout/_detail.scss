@@ -1,2 +1,16 @@
 .detail {
+  background: $gallery-dark;
+
+  .section {
+    h2 {
+      color: $black;
+    }
+  }
+
+  .teaser {
+    &__date,
+    &__title {
+      color: $black;
+    }
+  }
 }

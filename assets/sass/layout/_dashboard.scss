@@ -7,4 +7,18 @@
     margin-left: rem($sidenavigation-width);
     padding: rem(16) rem(56);
   }
+
+  .button {
+    &.is-primary {
+      background-color: $green !important;
+      color: $black !important;
+      border: none;
+      padding: rem(10) rem(20);
+
+      &:hover {
+        background-color: $green-dark !important;
+        color: $white !important;
+      }
+    }
+  }
 }

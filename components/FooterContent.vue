@@ -14,7 +14,7 @@
             <h4 class="title is-4">Livestream every sunday</h4>
             <div class="footer__twitch">
               <a href="https://www.twitch.tv/nxgg_tv" target="_blank">
-                <img src="../assets/theme/twitch.png" alt="Twitch" />
+                <font-awesome-icon :icon="['fab', 'twitch']" />
               </a>
             </div>
           </div>
@@ -24,13 +24,14 @@
         <div class="columns">
           <div class="column">
             <a href="https://www.facebook.com/nxggesports/" target="_blank">
-              <img src="../assets/theme/facebook.svg" alt="Twitch"
-            /></a>
+              <font-awesome-icon :icon="['fab', 'facebook']" />
+            </a>
             <a
               href="https://www.instagram.com/next_gaming_generation/?hl=de"
               target="_blank"
-              ><img src="../assets/theme/instagram.svg" alt="Twitch"
-            /></a>
+            >
+              <font-awesome-icon :icon="['fab', 'instagram']" />
+            </a>
           </div>
         </div>
       </div>

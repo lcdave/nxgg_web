@@ -16,6 +16,46 @@
       }
     }
   }
+
+  &--grey {
+    background-color: $shark;
+
+    .teaser__title {
+      h2 {
+        color: $white;
+      }
+    }
+  }
+
+  &--white {
+    background-color: $gallery-dark;
+
+    .teaser__title {
+      h2 {
+        color: $black;
+      }
+    }
+
+    .teaser__date {
+      color: $black;
+    }
+
+    .title {
+      color: $black;
+    }
+
+    .button {
+      &.is-primary {
+        color: $black !important;
+        border-color: $black !important;
+
+        &:hover {
+          color: $green-semi-dark !important;
+          border-color: $green-semi-dark !important;
+        }
+      }
+    }
+  }
 }
 
 .container {

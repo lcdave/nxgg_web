@@ -2,13 +2,9 @@
   <div class="list">
     <section class="section">
       <div class="container">
-        <nuxt-link
-          :to="{
-            name: 'index',
-          }"
-        >
-          <button class="button button--back">Zurück</button>
-        </nuxt-link>
+        <a href="" @click.prevent="$router.back()" class="back-link">
+          <font-awesome-icon :icon="['fas', 'arrow-left']" /> Zurück
+        </a>
         <nuxt-link :to="link">
           <div class="content-element" v-if="items">
             <h2 class="title is-2">{{ title }}</h2>
@@ -23,13 +19,9 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link
-          :to="{
-            name: 'index',
-          }"
-        >
-          <button class="button button--back">Zurück</button>
-        </nuxt-link>
+        <a href="" @click.prevent="$router.back()" class="back-link">
+          <font-awesome-icon :icon="['fas', 'arrow-left']" /> Zurück
+        </a>
       </div>
     </section>
   </div>

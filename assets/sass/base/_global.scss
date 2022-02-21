@@ -4,6 +4,10 @@ body {
   margin: 0;
 }
 
+body {
+  color: $white;
+}
+
 main {
   text-align: left;
 
@@ -50,4 +54,22 @@ select {
 .error {
   color: $cinnabar;
   margin-bottom: rem(10);
+}
+
+.back-link {
+  color: $black;
+  display: inline-block;
+
+  &:first-child {
+    margin-bottom: rem(30);
+  }
+
+  &:hover {
+    color: $black;
+    text-decoration: underline;
+  }
+
+  svg {
+    margin-right: rem(5);
+  }
 }

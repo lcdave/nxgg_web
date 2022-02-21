@@ -8,6 +8,7 @@ import PostList from "@/components/generic/postList.vue";
 
 export default Vue.extend({
   name: "TourneysList",
+  layout: "detail",
   components: { PostList },
   async asyncData({ $prismic, error }) {
     try {

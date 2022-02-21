@@ -1,19 +1,21 @@
 <template>
   <post-detail :post="tourney">
     <template #additionalContent>
-      <tourney-form />
+      <div class="post__additional-content">
+        Um sich für das Turnier anmelden zu können, müssen Sie sich im
+        Turnierbereich <router-link to="/user/login">einloggen.</router-link>
+      </div>
     </template>
   </post-detail>
 </template>
 
 <script>
 import PostDetail from "@/components/generic/postDetail.vue";
-import TourneyForm from "@/components/TourneyForm.vue";
 export default {
   components: {
     PostDetail,
-    TourneyForm,
   },
+  layout: "detail",
   async asyncData({ $prismic, params, error }) {
     try {
       // Query to get post content

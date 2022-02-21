@@ -1,16 +1,17 @@
 .footer {
   padding: rem(50) rem(20);
   text-align: left;
-  background-color: $black !important;
+  background-color: $heavy-metal !important;
   color: $white;
 
   @include from($desktop) {
-    padding: rem(90) 0 !important;
+    padding: rem(65) 0 rem(20) !important;
   }
 
   h2 {
     color: $white;
-    font-size: rem(40);
+    font-size: rem(80);
+    text-transform: uppercase;
     margin-bottom: rem(60) !important;
   }
 
@@ -22,6 +23,12 @@
   &__twitch {
     img {
       max-width: rem(40);
+    }
+
+    svg {
+      width: rem(30) !important;
+      height: rem(30) !important;
+      color: $white;
     }
   }
 
@@ -38,6 +45,13 @@
       display: inline-block;
       max-width: rem(30);
       margin-right: rem(10);
+    }
+
+    svg {
+      width: rem(30) !important;
+      height: rem(30) !important;
+      color: $white;
+      margin-right: rem(5);
     }
   }
 }
