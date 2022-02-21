@@ -1,27 +1,6 @@
 <template>
   <div class="userbar">
     <div class="userbar__user__greeting">Welcome, {{ profile.username }}!</div>
-    <div class="userbar__user">
-      <div class="dropdown" :class="{ 'is-active': dropdownActive }">
-        <div class="dropdown-trigger" @click="onDropdownClick">
-          <img
-            class="userbar__user__avatar"
-            src="../assets/theme/avatar.jpg"
-            alt="Avatar"
-          />
-        </div>
-        <div class="dropdown-menu" id="dropdown-menu" role="menu">
-          <div class="dropdown-content">
-            <nuxt-link to="/user/settings" class="dropdown-item"
-              >Einstellungen</nuxt-link
-            >
-            <a href="#" class="dropdown-item" @click="showModal('logout')">
-              Abmelden
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
     <modal
       :title="modals.logout.title"
       :isActive="modals.logout.isActive"
@@ -64,8 +43,10 @@ export default {
       },
     };
   },
-  async created() {
-    this.profile = await UserService.getProfile();
+  async mounted() {
+    if (this.user) {
+      this.profile = await UserService.getProfile();
+    }
   },
   methods: {
     onDropdownClick() {

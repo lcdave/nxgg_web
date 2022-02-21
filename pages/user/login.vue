@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import * as UserService from "@/services/supabase/user";
 export default {
   layout: "login",
   data: () => ({
@@ -71,16 +72,14 @@ export default {
     userProfile: null,
     formError: null,
   }),
-  async created() {
-    this.profile = this.$supabase.auth.user();
+  async mounted() {
+    /* when the component loads, fetch the user's profile */
+    this.profile = await UserService.getProfile();
 
-    //TODO: Use middleware to make this redirect (avoids redirect delay)
     if (this.profile) {
+      //TODO: Use middleware to make this redirect (avoids redirect delay)
       this.$router.push("/user/dashboard/overview");
     }
-
-    await this.getUserProfile();
-    console.log("user profile: ", this.userProfile);
   },
   methods: {
     async signIn() {
@@ -88,28 +87,15 @@ export default {
         email: this.email,
         password: this.password,
       });
-      await this.getUserProfile();
+      this.userProfile = await UserService.getProfile();
       if (!error) {
         this.profile = user;
         this.$store.commit("auth/setUser", user);
-        //this.$store.commit("auth/setAdmin", isAdmin);
         this.$router.push("/user/dashboard/overview");
       } else {
         this.formError = true;
       }
     },
-    async getUserProfile() {
-      const { user } = await this.$supabase.from("profiles").select("*");
-
-      console.log("user profile: ", user);
-
-      this.userProfile = user;
-    },
-  },
-  async mounted() {
-    /* when the component loads, fetch the user's profile */
-    const profile = await this.$supabase.auth.user();
-    this.profile = profile;
   },
 };
 </script>

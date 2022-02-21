@@ -8,9 +8,14 @@ const supabase = createClient(
 const user = supabase.auth.user();
 
 export async function getProfile() {
-  const data = await supabase.from("profiles").select("*").eq("id", user.id);
-
-  return data.data[0];
+  //const user = await supabase.auth.user();
+  console.log("getProfile: ", user);
+  if (user) {
+    const data = await supabase.from("profiles").select("*").eq("id", user.id);
+    return data.data[0];
+  } else {
+    return false;
+  }
 }
 
 export async function checkIfUsernameExists(username) {

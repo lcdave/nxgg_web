@@ -61,8 +61,6 @@ export default Vue.extend({
   },
   methods: {
     async checkIfUserIsRegistered(tourneyID) {
-      console.log(tourneyID);
-      //this.$emit("isUserRegistered", tourneyID);
       const { data, error } = await this.$supabase
         .from("profile_tourneys_nm")
         .select("*")
@@ -72,7 +70,6 @@ export default Vue.extend({
       if (data.length === 0) {
         return false;
       } else {
-        console.log(tourneyID);
         return true;
       }
     },
