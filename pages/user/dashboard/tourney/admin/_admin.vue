@@ -9,7 +9,6 @@
       <template #content>
         <tourneylist
           :list="tourneys"
-          @register="onRegisterClick"
           adminMode
           @tourneyDeleted="updateTourneys()"
           @tourneyEdited="updateTourneys()"
@@ -191,11 +190,6 @@ export default Vue.extend({
       }
 
       this.tourneys = tourneys;
-    },
-    async onRegisterClick(tourneyID) {
-      const { data, error } = await this.$supabase
-        .from("profile_tourneys_nm")
-        .insert([{ profile_id: this.user.id, tourney_id: tourneyID }]);
     },
     showModal(modal, additionalParam) {
       this.modals[modal].isActive = true;

@@ -13,11 +13,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "",
-  data() {
-    return {};
-  },
-  methods: {},
+  name: "Card",
 });
 </script>
 

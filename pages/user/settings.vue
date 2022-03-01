@@ -16,9 +16,5 @@ export default Vue.extend({
   layout: "dashboard",
   middleware: ["auth"],
   components: { Widget, UserSettingsForm },
-  data() {
-    return {};
-  },
-  methods: {},
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      @click="this.$emit(showModal, 'register', item.id)"
+      @click="$emit('showModal', 'register', item.id)"
       v-if="
         !adminMode && variant == 'global' && !isUserRegistered && freeSlots > 0
       "
@@ -9,7 +9,7 @@
       Anmelden
     </button>
     <button
-      @click="this.$emit(showModal, 'unsubscribe', item.id)"
+      @click="$emit('showModal', 'unsubscribe', item.id)"
       v-if="!adminMode && variant == 'global' && isUserRegistered"
     >
       Abmelden

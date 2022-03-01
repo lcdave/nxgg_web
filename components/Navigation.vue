@@ -39,7 +39,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "",
+  name: "Navigation",
   props: {
     isActive: {
       type: Boolean,
@@ -49,12 +49,8 @@ export default Vue.extend({
   data() {
     return {
       hamburgerOpen: false,
-      user: "",
-      name: "Michel",
     };
   },
-  mounted() {},
-  methods: {},
 });
 </script>
 

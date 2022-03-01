@@ -24,10 +24,6 @@ if (process.client) {
 export default Vue.extend({
   name: "Spinner",
   components: { BreedingRhombusSpinner },
-  data() {
-    return {};
-  },
-  methods: {},
 });
 </script>
 

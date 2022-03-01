@@ -34,7 +34,6 @@ export default Vue.extend({
     };
   },
   async created() {
-    this.$forceUpdate();
     this.user = this.$supabase.auth.user();
 
     let { data: tourneys, error } = await this.$supabase

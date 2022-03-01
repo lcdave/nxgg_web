@@ -70,7 +70,7 @@ export default {
     email: "",
     password: "",
     userProfile: null,
-    formError: null,
+    formError: false,
   }),
   async mounted() {
     /* when the component loads, fetch the user's profile */

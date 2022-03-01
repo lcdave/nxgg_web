@@ -36,9 +36,6 @@ export default Vue.extend({
       type: Boolean,
     },
   },
-  data() {
-    return {};
-  },
   methods: {
     onAcceptClick() {
       this.$emit("accept");

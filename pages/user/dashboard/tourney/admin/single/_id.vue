@@ -405,7 +405,6 @@ export default {
       }
     },
     async getFirstRoundID() {
-      console.log("getFirstRoundID, bracket id is: ", this.bracketID);
       const { data, error } = await this.$supabase
         .from("rounds_test")
         .select("id")
@@ -414,7 +413,6 @@ export default {
         .limit(1);
 
       if (!error) {
-        console.log(data);
         return data[0].id;
       }
     },
@@ -425,7 +423,7 @@ export default {
         let amountRounds = Math.log2(this.amountUsers);
 
         for (let i = 0; i < amountRounds; i++) {
-          await this.createRoundInDB(amountRounds);
+          await this.createRoundInDB();
         }
 
         const firstRoundID = await this.getFirstRoundID();

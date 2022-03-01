@@ -61,6 +61,5 @@ export default Vue.extend({
       this.userProfile = profile;
     });
   },
-  methods: {},
 });
 </script>

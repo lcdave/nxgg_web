@@ -89,8 +89,6 @@ export default {
 
     this.tourney = tourneys[0];
 
-    console.log("DATA", this.tourney);
-
     await this.setBracketBasicFields().then(() => {
       if (this.bracketID) {
         this.fillBracketObject();
@@ -100,7 +98,6 @@ export default {
     await this.setRegisteredTourneyUsers();
 
     await UserService.getProfile().then((profile) => {
-      console.log("debug profile", profile);
       this.profileID = profile.id;
     });
   },
