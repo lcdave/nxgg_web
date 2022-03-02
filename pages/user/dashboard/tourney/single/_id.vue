@@ -133,15 +133,8 @@ export default {
       }
     },
     async setRegisteredTourneyUsers() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "profile_tourneys_nm_test";
-      } else {
-        tableName = "profile_tourneys_nm";
-      }
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("profile_tourneys_nm")
         .select("*")
         .eq("tourney_id", this.tourney.id);
 
@@ -154,16 +147,8 @@ export default {
       console.log(error);
     },
     async setBracketBasicFields() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "brackets_test";
-      } else {
-        tableName = "brackets";
-      }
-
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("brackets")
         .select("*")
         .eq("tourney_id", this.tourney.id);
 
@@ -179,16 +164,8 @@ export default {
       }
     },
     async fillBracketObject() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "rounds_test";
-      } else {
-        tableName = "rounds";
-      }
-
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("rounds")
         .select("*")
         .eq("bracket_id", this.bracketID);
 
@@ -203,15 +180,8 @@ export default {
       }
     },
     async getMatches(round_id) {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "matches_test_users";
-      } else {
-        tableName = "matches_users";
-      }
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("matches_users")
         .select("*")
         .eq("round_id", round_id)
         .eq("bracket_id", this.bracketID)

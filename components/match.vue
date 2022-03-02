@@ -112,7 +112,7 @@ export default Vue.extend({
 
         if (winnerID) {
           const { data, error } = await this.$supabase
-            .from("matches_test")
+            .from("matches")
             .update({
               user_1_score: parseInt(this.user1Score),
               user_2_score: parseInt(this.user2Score),

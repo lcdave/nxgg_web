@@ -263,23 +263,15 @@ export default {
     },
     async setCurrentBracketRound(currentRound) {
       await this.$supabase
-        .from("brackets_test")
+        .from("brackets")
         .update({ currentRound: currentRound })
         .eq("tourney_id", this.tourney.id);
 
       this.bracket.currentRound = currentRound;
     },
     async setBracketBasicFields() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "brackets_test";
-      } else {
-        tableName = "brackets";
-      }
-
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("brackets")
         .select("*")
         .eq("tourney_id", this.tourney.id);
 
@@ -325,21 +317,14 @@ export default {
     },
     async createBracketRecordInDB() {
       // check if bracket already exists
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "brackets_test";
-      } else {
-        tableName = "brackets";
-      }
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("brackets")
         .select("*")
         .eq("tourney_id", this.tourney.id);
 
       if (data.length === 0) {
         const { data, error } = await this.$supabase
-          .from(tableName)
+          .from("brackets")
           .insert([{ tourney_id: this.tourney.id, currentRound: 0 }]);
 
         this.bracketID = Number(data[0].id);
@@ -356,15 +341,8 @@ export default {
       }
     },
     async setRegisteredTourneyUsers() {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "profile_tourneys_nm_test";
-      } else {
-        tableName = "profile_tourneys_nm";
-      }
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("profile_tourneys_nm")
         .select("*")
         .eq("tourney_id", this.tourney.id);
 
@@ -379,16 +357,8 @@ export default {
     async fillBracketObject() {
       this.bracketLoading = true;
 
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "rounds_test";
-      } else {
-        tableName = "rounds";
-      }
-
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("rounds")
         .select("*")
         .eq("bracket_id", this.bracketID);
 
@@ -404,15 +374,8 @@ export default {
       this.bracketLoading = false;
     },
     async getMatches(round_id) {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "matches_test_users";
-      } else {
-        tableName = "matches_users";
-      }
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("matches_users")
         .select("*")
         .eq("round_id", round_id)
         .eq("bracket_id", this.bracketID)
@@ -425,16 +388,8 @@ export default {
       }
     },
     async getUser(id) {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "profiles_test";
-      } else {
-        tableName = "profiles";
-      }
-
       const { data, error } = await this.$supabase
-        .from(tableName)
+        .from("profiles")
         .select("*")
         .eq("id", id);
 
@@ -444,7 +399,7 @@ export default {
     },
     async getFirstRoundID() {
       const { data, error } = await this.$supabase
-        .from("rounds_test")
+        .from("rounds")
         .select("id")
         .eq("bracket_id", this.bracketID)
         .order("id", { ascending: true })
@@ -481,13 +436,7 @@ export default {
       }
     },
     async createRoundInDB() {
-      let tableName = "";
-      if (this.testMode) {
-        tableName = "rounds_test";
-      } else {
-        tableName = "rounds";
-      }
-      await this.$supabase.from(tableName).insert([
+      await this.$supabase.from("rounds").insert([
         {
           bracket_id: this.bracketID,
         },
@@ -495,7 +444,7 @@ export default {
     },
     async getRoundsFromDB() {
       const { data, error } = await this.$supabase
-        .from("rounds_test")
+        .from("rounds")
         .select("*")
         .eq("bracket_id", this.bracketID)
         .order("id", { ascending: true });
@@ -534,15 +483,7 @@ export default {
       }
     },
     async createMatchInDB(user1ID, user2ID, roundId, matchSort) {
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "matches_test";
-      } else {
-        tableName = "matches";
-      }
-
-      const { data, error } = await this.$supabase.from(tableName).insert([
+      const { data, error } = await this.$supabase.from("matches").insert([
         {
           user_1_id: user1ID,
           user_2_id: user2ID,
@@ -580,46 +521,23 @@ export default {
     async deleteBracket() {
       this.bracketLoading = true;
       // delete matches from db
-      let tableName = "";
-
-      if (this.testMode) {
-        tableName = "matches_test";
-      } else {
-        tableName = "matches";
-      }
-
       const { data, matchesError } = await this.$supabase
-        .from(tableName)
+        .from("matches")
         .delete()
         .eq("bracket_id", this.bracketID);
 
       if (!matchesError) {
         // delete rounds from db
-        let tableNameRounds = "";
-
-        if (this.testMode) {
-          tableNameRounds = "rounds_test";
-        } else {
-          tableNameRounds = "rounds";
-        }
 
         const { data, roundsError } = await this.$supabase
-          .from(tableNameRounds)
+          .from("rounds")
           .delete()
           .eq("bracket_id", this.bracketID);
 
         if (!roundsError) {
           // delete bracket from db
-
-          let tableNameBrackets = "";
-
-          if (this.testMode) {
-            tableNameBrackets = "brackets_test";
-          } else {
-            tableNameBrackets = "brackets";
-          }
           const { data, bracketError } = await this.$supabase
-            .from(tableNameBrackets)
+            .from("brackets")
             .delete()
             .eq("id", this.bracketID);
 
@@ -665,7 +583,7 @@ export default {
     },
     async updateRoundCounter() {
       const { data, error } = await this.$supabase
-        .from("brackets_test")
+        .from("brackets")
         .update({
           roundCounter: this.roundCounter,
         })
@@ -714,7 +632,7 @@ export default {
           },
         });
         const nextRoundMatches = await this.$supabase
-          .from("matches_test_users")
+          .from("matches_users")
           .select("*")
           .eq("round_id", nextRoundID);
 
@@ -731,7 +649,7 @@ export default {
             tempUserStack.shift();
 
             await this.$supabase
-              .from("matches_test")
+              .from("matches")
               .update({
                 user_1_id: user1,
                 user_2_id: user2,
@@ -767,7 +685,7 @@ export default {
       const previousRoundID = this.bracket.currentRound - 1;
 
       await this.$supabase
-        .from("matches_test")
+        .from("matches")
         .update({
           user_1_id: null,
           user_2_id: null,
