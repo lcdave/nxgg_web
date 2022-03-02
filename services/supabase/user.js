@@ -1,15 +1,22 @@
 const { createClient } = require("@supabase/supabase-js");
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+let supabaseURL;
+let supabaseKEY;
+
+if (process.env.appmode === "dev") {
+  supabaseURL = process.env.SUPABASE_URL_DEV;
+  supabaseKEY = process.env.SUPABASE_KEY_DEV;
+} else if (process.env.appmode === "prod") {
+  supabaseURL = process.env.SUPABASE_URL_PROD;
+  supabaseKEY = process.env.SUPABASE_URL_PROD;
+}
+
+const supabase = createClient(supabaseURL, supabaseKEY);
 
 const user = supabase.auth.user();
 
 export async function getProfile() {
   //const user = await supabase.auth.user();
-  console.log("getProfile: ", user);
   if (user) {
     const data = await supabase.from("profiles").select("*").eq("id", user.id);
     return data.data[0];

@@ -129,7 +129,10 @@ export default {
     },
   },
   env: {
-    SUPABASE_KEY: process.env.SUPABASE_KEY,
-    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_KEY_DEV: process.env.SUPABASE_KEY_DEV,
+    SUPABASE_KEY_PROD: process.env.SUPABASE_KEY_PROD,
+    SUPABASE_URL_DEV: process.env.SUPABASE_URL_DEV,
+    SUPABASE_URL_PROD: process.env.SUPABASE_URL_PROD,
+    appmode: process.env.appmode,
   },
 };

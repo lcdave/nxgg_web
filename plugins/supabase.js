@@ -1,11 +1,18 @@
 import { createClient } from "@supabase/supabase-js";
 
-const credentials = {
-  anonPulic:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MTAzNTY4OSwiZXhwIjoxOTU2NjExNjg5fQ.GzJ2mWj7Dsi8YG8gzXSKA7QjJuJmb105-4Jc9hdC3Gg",
-  url: "https://gmbuzdpradbrxaddglbn.supabase.co",
-};
-const supabase = createClient(credentials.url, credentials.anonPulic);
+let supabase;
+
+if (process.env.appmode === "dev") {
+  supabase = createClient(
+    process.env.SUPABASE_URL_DEV,
+    process.env.SUPABASE_KEY_DEV
+  );
+} else if (process.env.appmode === "prod") {
+  supabase = createClient(
+    process.env.SUPABASE_URL_PROD,
+    process.env.SUPABASE_KEY_PROD
+  );
+}
 
 export default (_, inject) => {
   inject("supabase", supabase);

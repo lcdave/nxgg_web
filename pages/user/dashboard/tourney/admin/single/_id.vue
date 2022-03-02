@@ -100,7 +100,7 @@
                     :icon="['fas', 'trash']"
                     @click="showModal('deleteRound')"
                     class="icon icon--red"
-                    v-if="roundCounter != 1"
+                    v-if="showRoundDelete"
                   />
                 </div>
               </template>
@@ -181,8 +181,9 @@ export default {
         message: "",
       },
       hasBracket: false,
-      isFinalRound: false,
+      showRoundDelete: false,
       roundCounter: 1,
+      isFinalRound: false,
     };
   },
   async created() {
@@ -214,6 +215,16 @@ export default {
           this.hasBracket = true;
         } else {
           this.hasBracket = false;
+        }
+      },
+      deep: true,
+    },
+    roundCounter: {
+      handler() {
+        if (this.roundCounter == 1) {
+          this.showRoundDelete = false;
+        } else {
+          this.showRoundDelete = true;
         }
       },
       deep: true,
@@ -275,6 +286,7 @@ export default {
       if (!error && data.length > 0) {
         this.bracketID = Number(data[0].id);
         this.bracket.currentRound = data[0].currentRound;
+        this.roundCounter = data[0].roundCounter;
       } else {
         if (error) {
           console.log(error);
@@ -302,6 +314,8 @@ export default {
 
       this.bracketLoading = false;
       this.isFirstRound = true;
+
+      this.setBracketBasicFields();
 
       this.$toast.show("Bracket wurde erstellt", {
         duration: 4000,
@@ -649,8 +663,22 @@ export default {
         });
       }
     },
+    async updateRoundCounter() {
+      const { data, error } = await this.$supabase
+        .from("brackets_test")
+        .update({
+          roundCounter: this.roundCounter,
+        })
+        .eq("id", this.bracketID);
+
+      if (error) {
+        console.log(error);
+      }
+    },
     async generateNextRound() {
       this.roundCounter++;
+      await this.updateRoundCounter();
+
       const nextRoundID = this.bracket.currentRound + 1;
 
       let lastRoundWinners = [];
@@ -734,6 +762,8 @@ export default {
     },
     async resetCurrentRound() {
       this.roundCounter--;
+      await this.updateRoundCounter();
+
       const previousRoundID = this.bracket.currentRound - 1;
 
       await this.$supabase
