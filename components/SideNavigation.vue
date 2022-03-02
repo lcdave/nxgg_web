@@ -1,7 +1,9 @@
 <template>
   <div class="side-navigation">
     <div class="side-navigation__logo">
-      <img src="../assets/theme/logo.svg" alt="NXGG Logo" />
+      <router-link to="/user/dashboard/overview">
+        <img src="../assets/theme/logo.svg" alt="NXGG Logo" />
+      </router-link>
     </div>
     <div class="side-navigation__cta">
       <ul>
@@ -72,6 +74,9 @@ export default {
       this.isAdmin = await UserService.checkIfAdminUser();
       this.setActiveNavItemByCurrentRoute();
     });
+  },
+  updated() {
+    this.setActiveNavItemByCurrentRoute();
   },
   methods: {
     onLinkClick(e) {

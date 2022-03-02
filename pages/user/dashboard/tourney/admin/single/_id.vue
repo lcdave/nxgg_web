@@ -64,18 +64,20 @@
                     :icon="['fas', 'plus-circle']"
                     @click="generateBracket()"
                     class="icon icon--green"
+                    v-if="!hasBracket"
                   />
                   <font-awesome-icon
                     :icon="['fas', 'trash']"
                     @click="showModal('deleteBracket')"
                     class="icon icon--red"
+                    v-if="hasBracket"
                   />
                 </div>
               </template>
             </card>
           </template>
         </widget>
-        <widget>
+        <widget v-if="hasBracket">
           <template #content>
             <card>
               <template #title>
@@ -92,11 +94,13 @@
                     :icon="['fas', 'plus-circle']"
                     @click="generateNextRound()"
                     class="icon icon--green"
+                    v-if="!isFinalRound"
                   />
                   <font-awesome-icon
                     :icon="['fas', 'trash']"
                     @click="showModal('deleteRound')"
                     class="icon icon--red"
+                    v-if="roundCounter != 1"
                   />
                 </div>
               </template>
@@ -176,6 +180,9 @@ export default {
         type: "",
         message: "",
       },
+      hasBracket: false,
+      isFinalRound: false,
+      roundCounter: 1,
     };
   },
   async created() {
@@ -195,6 +202,22 @@ export default {
     await this.setRegisteredTourneyUsers();
 
     this.setTourneyRequirementsReached();
+
+    if (Object.keys(this.bracket).length !== 0) {
+      this.hasBracket = true;
+    }
+  },
+  watch: {
+    bracketLoading: {
+      handler() {
+        if (Object.keys(this.bracket).length !== 0) {
+          this.hasBracket = true;
+        } else {
+          this.hasBracket = false;
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     formatDate(date) {
@@ -278,6 +301,7 @@ export default {
       await this.fillBracketObject();
 
       this.bracketLoading = false;
+      this.isFirstRound = true;
 
       this.$toast.show("Bracket wurde erstellt", {
         duration: 4000,
@@ -475,8 +499,6 @@ export default {
         if (i === 0) {
           let tempUserStack = this.tourneyUsers;
 
-          console.log(tempUserStack);
-
           for (let i = 0; i < this.amountUsers; i += 2) {
             if (tempUserStack.length >= 2) {
               let user1 = tempUserStack[0].profile_id;
@@ -542,6 +564,7 @@ export default {
       }
     },
     async deleteBracket() {
+      this.bracketLoading = true;
       // delete matches from db
       let tableName = "";
 
@@ -605,6 +628,7 @@ export default {
       }
 
       this.bracket = {};
+      this.bracketLoading = false;
     },
     async saveResults() {
       let hasError = false;
@@ -626,6 +650,7 @@ export default {
       }
     },
     async generateNextRound() {
+      this.roundCounter++;
       const nextRoundID = this.bracket.currentRound + 1;
 
       let lastRoundWinners = [];
@@ -645,6 +670,10 @@ export default {
         } else {
           lastRoundWinners.push(match[1].winner_id);
         }
+      }
+
+      if (lastRoundWinners.length < 3) {
+        this.isFinalRound = true;
       }
 
       if (allMatchesHaveResults) {
@@ -704,6 +733,7 @@ export default {
       }
     },
     async resetCurrentRound() {
+      this.roundCounter--;
       const previousRoundID = this.bracket.currentRound - 1;
 
       await this.$supabase

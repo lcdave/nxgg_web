@@ -10,6 +10,7 @@
           dataFilter="future"
           v-if="tourneys"
           :user="user"
+          :key="rerenderHelper"
         />
       </template>
     </widget>
@@ -31,6 +32,7 @@ export default Vue.extend({
     return {
       user: "",
       tourneys: [],
+      rerenderHelper: 0,
     };
   },
   async created() {
@@ -38,11 +40,15 @@ export default Vue.extend({
 
     let { data: tourneys, error } = await this.$supabase
       .from("tourneys")
-      .select("*");
+      .select("*")
+      .order("date", { ascending: true });
 
     this.tourneys = tourneys;
   },
   methods: {
+    forceRerender() {
+      this.rerenderHelper += 1;
+    },
     async onRegisterClick(tourneyID) {
       // check if user is already registered
       const { data, error } = await this.$supabase
@@ -80,6 +86,7 @@ export default Vue.extend({
           position: "top-right",
         });
       }
+      this.forceRerender();
     },
     async updateRegistrationsCounter(operator, tourneyID) {
       const { data: registrations, error } = await this.$supabase
@@ -124,6 +131,7 @@ export default Vue.extend({
           position: "top-right",
         });
       }
+      this.forceRerender();
     },
   },
 });
