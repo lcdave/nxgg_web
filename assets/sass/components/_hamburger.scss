@@ -1,21 +1,19 @@
 .hamburger {
-  width: rem(30);
-  height: rem(25);
+  width: rem(25);
+  height: rem(20);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: fixed;
-  top: rem(23);
+  top: rem(20);
   right: rem(32);
   z-index: 3;
 
   @include from($tablet) {
-    top: rem(30);
     right: rem(30);
   }
 
   @include from($desktop) {
-    top: rem(40);
     right: rem(60);
   }
 
@@ -26,13 +24,13 @@
   &__item {
     height: rem(4);
     width: 100%;
-    background: $tundora;
+    background: $white;
     transition: transform 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95),
       opacity 300ms linear;
 
     &--first {
       .hamburger--is-open & {
-        transform: translate(0, 15px) rotate(45deg);
+        transform: translate(0, 10px) rotate(45deg);
       }
     }
 
@@ -52,6 +50,13 @@
 
 .topbar {
   &.nav-is-active {
+    .hamburger {
+      right: rem(45);
+
+      @include from($desktop) {
+        right: rem(75);
+      }
+    }
     .hamburger__item {
       background: $white;
     }

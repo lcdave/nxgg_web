@@ -1,0 +1,27 @@
+.widget {
+  &--small {
+    width: 30%;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: rem(20);
+
+    h3 {
+      font-size: rem(22);
+    }
+  }
+
+  &__content {
+    overflow: hidden;
+    background-color: $outer-space;
+    border-radius: rem(6);
+    padding: rem(20) rem(30);
+    margin-bottom: rem(30);
+  }
+
+  .button {
+    font-size: rem(14);
+  }
+}

@@ -10,7 +10,26 @@
           :key="menuLink.id"
           >{{ $prismic.asText(menuLink.label) }}</prismic-link
         >
-        <a v-if="user" @click="signout">Logout</a>
+      </div>
+      <div class="mainnav__fixed-links">
+        <router-link to="/user/login/"> Login </router-link>
+      </div>
+      <div class="mainnav__social-media">
+        <div class="mainnav__social-media-title">Follow us</div>
+        <div class="mainnav__social-media-icons">
+          <a href="https://www.facebook.com/nxggesports/" target="_blank">
+            <font-awesome-icon :icon="['fab', 'facebook']" />
+          </a>
+          <a
+            href="https://www.instagram.com/next_gaming_generation/?hl=de"
+            target="_blank"
+          >
+            <font-awesome-icon :icon="['fab', 'instagram']" />
+          </a>
+          <a href="https://www.twitch.tv/nxgg_tv" target="_blank">
+            <font-awesome-icon :icon="['fab', 'twitch']" />
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -18,11 +37,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
 
 export default Vue.extend({
-  name: "",
+  name: "Navigation",
   props: {
     isActive: {
       type: Boolean,
@@ -32,31 +49,7 @@ export default Vue.extend({
   data() {
     return {
       hamburgerOpen: false,
-      user: "",
-      name: "Michel",
     };
-  },
-  mounted() {
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
-      if (user) {
-        this.user = user;
-      } else {
-        this.user = null;
-      }
-    });
-  },
-  methods: {
-    signout() {
-      firebase
-        .auth()
-        .signOut()
-        .then((result) => {
-          console.log(result);
-          this.user = "";
-          this.$router.push("/");
-        });
-    },
   },
 });
 </script>

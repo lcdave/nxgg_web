@@ -1,0 +1,62 @@
+.dialog {
+  width: rem(500);
+  margin: 0 auto;
+  background-color: $outer-space;
+
+  &--large {
+    width: rem(900);
+  }
+
+  &__title {
+    font-size: rem(22);
+    padding: rem(15) rem(40);
+    border-bottom: rem(1) solid $mako;
+  }
+
+  &__content {
+    color: $white;
+
+    &-text {
+      padding: rem(20) rem(40);
+
+      strong {
+        color: $white;
+      }
+    }
+
+    &-action {
+      padding: 0 rem(40) rem(25);
+
+      button {
+        background: $green;
+        border: none;
+        padding: rem(10) rem(20);
+        border-radius: rem(20);
+        color: $mine-shaft;
+        outline: none;
+        display: inline-block;
+        cursor: pointer;
+
+        &:hover {
+          background: $green-dark;
+          color: $white;
+        }
+
+        &.cancel {
+          background: $gull-gray;
+          color: $white;
+          margin-left: rem(5);
+
+          &:hover {
+            background: $geyser;
+            color: $black;
+          }
+        }
+      }
+    }
+  }
+
+  .label {
+    color: $white;
+  }
+}

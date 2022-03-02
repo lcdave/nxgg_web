@@ -4,6 +4,10 @@ body {
   margin: 0;
 }
 
+body {
+  color: $white;
+}
+
 main {
   text-align: left;
 
@@ -20,4 +24,52 @@ img {
 
 .content-element {
   margin-bottom: rem(80);
+}
+
+.site-title {
+  font-size: rem(34);
+  margin-bottom: rem(20);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+
+.fade-enter,
+.fade-leave-to
+/* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+
+.select,
+select {
+  width: 100%;
+
+  &:after {
+    border-color: $black !important;
+  }
+}
+
+.error {
+  color: $cinnabar;
+  margin-bottom: rem(10);
+}
+
+.back-link {
+  color: $black;
+  display: inline-block;
+
+  &:first-child {
+    margin-bottom: rem(30);
+  }
+
+  &:hover {
+    color: $black;
+    text-decoration: underline;
+  }
+
+  svg {
+    margin-right: rem(5);
+  }
 }

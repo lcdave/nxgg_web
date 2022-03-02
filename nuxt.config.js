@@ -42,7 +42,7 @@ export default {
     "./assets/sass/base/_fonts.scss",
   ],
 
-  buildModules: ["@nuxtjs/style-resources"],
+  buildModules: ["@nuxtjs/style-resources", "@nuxtjs/fontawesome"],
 
   styleResources: {
     scss: [
@@ -53,7 +53,10 @@ export default {
     ],
   },
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ["./plugins/firebase.js"],
+  plugins: [
+    { src: "./plugins/supabase.js" },
+    { src: "~/plugins/persistedState.client.js" },
+  ],
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -72,10 +75,37 @@ export default {
         },
       },
     ],
+    [
+      "nuxt-fontawesome",
+      {
+        imports: [
+          {
+            set: "@fortawesome/free-solid-svg-icons",
+            icons: ["fas"],
+          },
+          {
+            set: "@fortawesome/free-brands-svg-icons",
+            icons: ["fab"],
+          },
+        ],
+      },
+    ],
     ["nuxt-sm"],
-    ["nuxt-buefy", { css: false }],
+    [
+      "nuxt-buefy",
+      {
+        css: false,
+        defaultIconPack: "fas",
+        materialDesignIconsHRef:
+          "https://use.fontawesome.com/releases/v5.4.1/css/all.css",
+      },
+    ],
     ["@nuxtjs/axios"],
+    "@nuxtjs/toast",
   ],
+  toast: {
+    iconPack: "fontawesome",
+  },
   generate: {
     fallback: true,
   },
@@ -91,5 +121,18 @@ export default {
   ignore: [...getStoriesPaths().map((path) => path.replace("../", "~/"))],
   prismic: {
     linkResolver: "~/plugins/link-resolver.js",
+  },
+  fontawesome: {
+    icons: {
+      solid: true,
+      brands: true,
+    },
+  },
+  env: {
+    SUPABASE_KEY_DEV: process.env.SUPABASE_KEY_DEV,
+    SUPABASE_KEY_PROD: process.env.SUPABASE_KEY_PROD,
+    SUPABASE_URL_DEV: process.env.SUPABASE_URL_DEV,
+    SUPABASE_URL_PROD: process.env.SUPABASE_URL_PROD,
+    appmode: process.env.appmode,
   },
 };

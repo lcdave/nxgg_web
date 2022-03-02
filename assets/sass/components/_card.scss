@@ -1,0 +1,63 @@
+.card {
+  background-color: $outer-space;
+  color: $white;
+  box-shadow: none;
+
+  &__title {
+    border-bottom: rem(1) solid $mako;
+    margin-bottom: rem(20);
+    padding-bottom: rem(10);
+
+    h3 {
+      font-size: rem(22);
+    }
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__key {
+    font-weight: 600;
+  }
+
+  &__section {
+    margin-bottom: rem(20);
+    padding-bottom: rem(20);
+    border-bottom: rem(1) solid $mine-shaft-light;
+
+    &-title {
+      margin-bottom: rem(10);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+
+    &-text {
+      margin-bottom: rem(20);
+    }
+
+    button {
+      margin-right: rem(10);
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .icon {
+      margin-right: rem(10);
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

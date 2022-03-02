@@ -1,0 +1,16 @@
+.error-layout {
+  min-height: calc(100vh - 592px);
+
+  h1 {
+    font-size: rem(40);
+    padding-top: rem(150);
+  }
+
+  a {
+    color: $green;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

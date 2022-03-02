@@ -8,9 +8,9 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
       <div class="container">
         <div class="content-element">
           <div class="post" v-if="post">
-            <a href="" @click.prevent="$router.back()"
-              ><button class="button">Zurück</button></a
-            >
+            <a href="" @click.prevent="$router.back()" class="back-link">
+              <font-awesome-icon :icon="['fas', 'arrow-left']" /> Zurück
+            </a>
             <div class="post__title">
               <h2 class="title is-2">{{ $prismic.asText(post.title) }}</h2>
             </div>
@@ -24,7 +24,9 @@ https://www.slicemachine.dev/documentation/nuxt/add-the-slice-zone-to-your-page
               <prismic-rich-text :field="post.text" />
             </div>
             <slot name="additionalContent" />
-            <NuxtLink to="/"><button class="button">Zurück</button></NuxtLink>
+            <a href="" @click.prevent="$router.back()" class="back-link">
+              <font-awesome-icon :icon="['fas', 'arrow-left']" /> Zurück
+            </a>
           </div>
         </div>
       </div>

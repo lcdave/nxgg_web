@@ -12,6 +12,7 @@ export default {
   components: {
     PostDetail,
   },
+  layout: "detail",
   async asyncData({ $prismic, params, error }) {
     try {
       // Query to get post content

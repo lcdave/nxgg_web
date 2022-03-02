@@ -1,0 +1,15 @@
+.icon {
+  cursor: pointer !important;
+
+  &--green {
+    color: $green;
+  }
+
+  &--blue {
+    color: $chetwode-blue;
+  }
+
+  &--red {
+    color: $cinnabar;
+  }
+}

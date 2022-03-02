@@ -1,0 +1,13 @@
+.widget-container {
+  &__row {
+    display: flex;
+
+    .widget {
+      margin-right: rem(40);
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
