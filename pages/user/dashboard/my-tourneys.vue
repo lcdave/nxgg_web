@@ -50,10 +50,17 @@ export default Vue.extend({
       this.user = user;
     });
 
-    let { data: tourneys, error } = await this.$supabase
-      .from("profile_tourneys_view")
-      .select("*")
+    const { data, error } = await this.$supabase
+      .from("profile_tourneys_nm")
+      .select("tourney_id")
       .eq("profile_id", this.user.id);
+
+    let tourneyIDs = data.map((tourney) => tourney.tourney_id);
+
+    const { data: tourneys, error: error2 } = await this.$supabase
+      .from("tourneys")
+      .select("*")
+      .in("id", tourneyIDs);
 
     this.tourneys = tourneys;
 
