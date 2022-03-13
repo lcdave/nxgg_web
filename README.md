@@ -46,7 +46,7 @@ nvm for windows: https://github.com/coreybutler/nvm-windows
 ```
 nvm use
 ```
-1. Install the dependencies
+4. Install the dependencies
 
 ```
 npm install
