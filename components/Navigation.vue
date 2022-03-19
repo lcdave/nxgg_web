@@ -3,13 +3,10 @@
     <div class="mainnav__trigger"></div>
     <div class="mainnav__content" :class="isActive">
       <div class="mainnav__links">
-        <prismic-link
-          :field="menuLink.link"
-          class="navbar-item"
-          v-for="menuLink in $store.state.menu.menu_links"
-          :key="menuLink.id"
-          >{{ $prismic.asText(menuLink.label) }}</prismic-link
-        >
+        <a href="#" class="navbar-item">Home</a>
+        <a href="#news" class="navbar-item">News</a>
+        <a href="#events" class="navbar-item">Events</a>
+        <a href="#tourneys" class="navbar-item">Tourneys</a>
       </div>
       <div class="mainnav__fixed-links">
         <router-link to="/user/login/"> Login </router-link>
