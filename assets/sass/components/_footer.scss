@@ -18,6 +18,14 @@
   &__contact {
     font-size: rem(18);
     margin-bottom: rem(40);
+
+    a {
+      color: $green-light;
+
+      &:hover {
+        color: $green-dark;
+      }
+    }
   }
 
   &__twitch {

@@ -7,7 +7,7 @@
           <div class="column is-three-quarters is-half-tablet">
             <div class="contact">
               <h4 class="title is-4">Contact</h4>
-              <p>info@nxgg.org</p>
+              <a href="mailto:info@nxgg.ch">info@nxgg.ch</a>
             </div>
           </div>
           <div class="column">
@@ -38,7 +38,7 @@
       <div class="footer__copyright">
         <div class="columns">
           <div class="column is-three-quarters is-half-tablet">
-            © NxGG, 2021
+            © NxGG, {{ currentYear }}
           </div>
         </div>
       </div>
@@ -47,7 +47,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    currentYear() {
+      return new Date().getFullYear();
+    },
+  },
+};
 </script>
 
 <style lang="scss" src="../assets/sass/components/_footer.scss"></style>
