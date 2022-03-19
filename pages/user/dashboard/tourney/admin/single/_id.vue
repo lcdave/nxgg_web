@@ -149,6 +149,8 @@ import Bracket from "@/components/generic/bracket.vue";
 import Modal from "@/components/generic/modal.vue";
 import Spinner from "@/components/generic/spinner.vue";
 
+import * as TourneyService from "@/services/tourneys/tourneys";
+
 export default {
   layout: "dashboard",
   components: { Widget, Card, Bracket, Modal, Spinner },
@@ -455,8 +457,13 @@ export default {
         console.log(error);
       }
     },
+
     async generateMatches() {
       const data = await this.getRoundsFromDB();
+
+      // shuffle tourneyUsers
+      this.tourneyUsers = TourneyService.shuffleArray(this.tourneyUsers);
+
       // loop over rounds
       for (const [i, round] of data.entries()) {
         if (i === 0) {
