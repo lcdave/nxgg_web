@@ -11,10 +11,14 @@
 
   &__image {
     margin-bottom: rem(15);
-
-    img {
-      border-radius: rem(6);
-    }
+    border-radius: rem(6);
+    position: relative;
+    width: 100%;
+    display: block;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    height: rem(404);
   }
 
   &__date {
