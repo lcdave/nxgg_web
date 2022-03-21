@@ -1,9 +1,10 @@
 <template>
   <nuxt-link :to="link">
     <div class="teaser" v-if="teaser.data">
-      <div class="teaser__image">
-        <img :src="teaser.data.image.url" alt="" />
-      </div>
+      <div
+        class="teaser__image"
+        :style="`background-image: url(${teaser.data.image.url})`"
+      ></div>
       <div class="teaser__date">
         {{ formatDate(teaser.data.date) }}
       </div>
